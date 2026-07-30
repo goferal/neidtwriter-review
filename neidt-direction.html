@@ -139,8 +139,8 @@ section{padding:clamp(48px,7vw,96px) 0;position:relative}
 .toc a span{font-family:var(--mono);font-size:11px;color:var(--ink-40);margin-right:14px}
 
 ul.tight{margin:12px 0 0 0;padding-left:0;list-style:none}
-ul.tight li{padding:8px 0;border-bottom:1px solid rgba(22,21,15,.16);font-size:16.5px;line-height:1.45;display:grid;grid-template-columns:22px 1fr;gap:10px}
-ul.tight li:before{content:"—";color:var(--flare);font-family:var(--mono)}
+ul.tight li{padding:8px 0 8px 32px;border-bottom:1px solid rgba(22,21,15,.16);font-size:16.5px;line-height:1.45;position:relative}
+ul.tight li:before{content:"—";color:var(--flare);font-family:var(--mono);position:absolute;left:0}
 .invert ul.tight li{border-color:#3A382C}
 
 .q{display:grid;grid-template-columns:34px 1fr;gap:12px;padding:14px 0;border-bottom:1px solid var(--rule)}
