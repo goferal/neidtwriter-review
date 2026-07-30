@@ -1,0 +1,5 @@
+# REVIEW BUILD — swap this file before launch.
+# Placeholder copy shouldn't be indexed under Jeff's name.
+# At launch: replace this file with robots.production.txt
+User-agent: *
+Disallow: /
