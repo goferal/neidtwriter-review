@@ -35,13 +35,14 @@ html[data-theme="dark"] nav.contra{
   --paper:#F2EEE4; --paper-2:#E7E1D2;
   --ink:#16150F; --ink-70:#5A574A; --ink-40:#9A9585;
   --ink-line:#C9C2AE;
-  --flare:#F03C13; --flare-soft:#FFE9E2;
-  /* Vermilion at full chroma is 3.38:1 on paper — fine for display
-     type (WCAG large-text threshold is 3:1) but short of the 4.5:1
-     small text needs. --flare-ink is the same hue darkened until it
-     clears 4.5:1, and it's what labels, links and hover backgrounds
-     use. Display headlines keep the brighter one. */
-  --flare-ink:#CC300D;
+  --flare:#3D7C80; --flare-soft:#E1EEEE;
+  /* Teal (Jeff's pick, July 2026 — replaced the original vermilion).
+     #3D7C80 is 4.13:1 on paper — clears the 3:1 display bar with
+     room, but the two-token system stays: --flare-ink is the same
+     hue darkened to 5.07:1 for labels, links and hover backgrounds,
+     so small text keeps extra headroom. Display headlines keep the
+     brighter one. */
+  --flare-ink:#356D71;
   --track:#D5CFBD; --track-hover:#CBC4B0;
   --nav-bg:rgba(242,238,228,.86);
 }
@@ -54,9 +55,9 @@ html:not([data-theme="dark"]) nav.contra{
   --paper:#16150F; --paper-2:#201E16;
   --ink:#F2EEE4; --ink-70:#B5B0A0; --ink-40:#7A7466;
   --ink-line:#3A382C;
-  /* On ink, the lightened vermilion already clears 4.5:1, so display
-     and text accents are the same colour here. */
-  --flare:#FF5A32; --flare-soft:#33170D; --flare-ink:#FF5A32;
+  /* On ink, the lightened teal clears 4.5:1 easily (6.77:1), so
+     display and text accents are the same colour here. */
+  --flare:#5FA9AE; --flare-soft:#0F2426; --flare-ink:#5FA9AE;
   --track:#37342C; --track-hover:#433F35;
   --nav-bg:rgba(22,21,15,.88);
 }
@@ -128,7 +129,7 @@ nav,nav *{transition:background-color .35s ease,color .35s ease,border-color .35
 }
 
 /* ---------- theme toggle ----------
-   Standard sleek switch: grey pill track, vermilion knob sliding
+   Standard sleek switch: grey pill track, teal knob sliding
    between a fixed sun and moon. The one deliberate borrowing from
    the rest of the site is the knob colour — it's the same circle as
    the mark in the logo, so the control still belongs here even
