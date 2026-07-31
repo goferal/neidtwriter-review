@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow"><!-- review build only -->
-<title>Accent A — Magenta · Jeff Neidt — Brand strategy &amp; creative direction</title>
+<title>Accent E — Teal × Magenta · Jeff Neidt — Brand strategy &amp; creative direction</title>
 <meta name="description" content="Brand strategy and creative direction, with a writer's ear. Jeff Neidt builds brand foundations, positioning and campaigns for companies with something true to say.">
 <meta name="theme-color" content="#F2EEE4">
 <meta property="og:title" content="Jeff Neidt — Brand strategy &amp; creative direction">
@@ -21,11 +21,20 @@
 <style>
 /* accent study override */
 html, html[data-theme="dark"] .invert, html[data-theme="dark"] body.flip, html[data-theme="dark"] nav.contra{
-  --flare:#EF019F; --flare-soft:#FCE3F3; --flare-ink:#C70087;
+  --flare:#3D7C80; --flare-soft:#E1EEEE; --flare-ink:#356D71;
 }
 html[data-theme="dark"], html:not([data-theme="dark"]) .invert, html:not([data-theme="dark"]) body.flip, html:not([data-theme="dark"]) nav.contra{
-  --flare:#FF3DB6; --flare-soft:#330822; --flare-ink:#FF3DB6;
+  --flare:#5FA9AE; --flare-soft:#0F2426; --flare-ink:#5FA9AE;
 }
+
+/* magenta secondary — reserved for the loud word, the logo dot, selection */
+h1 .flare, h2 .flare, h3 .flare{color:#EF019F}
+html[data-theme="dark"] h1 .flare, html[data-theme="dark"] h2 .flare, html[data-theme="dark"] h3 .flare{color:#FF3DB6}
+html:not([data-theme="dark"]) .invert .flare{color:#FF3DB6}
+html[data-theme="dark"] .invert .flare{color:#EF019F}
+.dot{background:#EF019F}
+html[data-theme="dark"] .dot{background:#FF3DB6}
+::selection{background:#EF019F;color:#F2EEE4}
 </style>
 </head>
 <body>
@@ -178,6 +187,6 @@ html[data-theme="dark"], html:not([data-theme="dark"]) .invert, html:not([data-t
 </footer>
 
 <script src="assets/site.js"></script>
-<div style="position:fixed;bottom:14px;left:14px;z-index:99;display:flex;flex-wrap:wrap;gap:1px;border:1px solid var(--ink);background:var(--ink);font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase"><span style="padding:7px 10px;background:var(--ink);color:var(--paper)">Accent study</span><a href="accent-magenta.html" style="padding:7px 10px;background:var(--flare-ink);color:var(--paper);text-decoration:none">A — Magenta</a><a href="accent-cobalt.html" style="padding:7px 10px;background:var(--paper);color:var(--ink);text-decoration:none">B — Cobalt</a><a href="accent-teal.html" style="padding:7px 10px;background:var(--paper);color:var(--ink);text-decoration:none">C — Teal</a><a href="accent-dusty.html" style="padding:7px 10px;background:var(--paper);color:var(--ink);text-decoration:none">D — Dusty blue</a><a href="accent-tealmagenta.html" style="padding:7px 10px;background:var(--paper);color:var(--ink);text-decoration:none">E — Teal × Magenta</a></div>
+<div style="position:fixed;bottom:14px;left:14px;z-index:99;display:flex;flex-wrap:wrap;gap:1px;border:1px solid var(--ink);background:var(--ink);font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase"><span style="padding:7px 10px;background:var(--ink);color:var(--paper)">Accent study</span><a href="accent-magenta.html" style="padding:7px 10px;background:var(--paper);color:var(--ink);text-decoration:none">A — Magenta</a><a href="accent-cobalt.html" style="padding:7px 10px;background:var(--paper);color:var(--ink);text-decoration:none">B — Cobalt</a><a href="accent-teal.html" style="padding:7px 10px;background:var(--paper);color:var(--ink);text-decoration:none">C — Teal</a><a href="accent-dusty.html" style="padding:7px 10px;background:var(--paper);color:var(--ink);text-decoration:none">D — Dusty blue</a><a href="accent-tealmagenta.html" style="padding:7px 10px;background:var(--flare-ink);color:var(--paper);text-decoration:none">E — Teal × Magenta</a></div>
 </body>
 </html>
