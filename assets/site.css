@@ -207,6 +207,12 @@ section{padding:clamp(52px,7.5vw,112px) 0}
 .cl{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-70);display:block;margin-top:8px}
 .noticed{font-size:16.5px;line-height:1.45;color:var(--ink-70);max-width:44ch}
 .noticed em{font-style:italic}
+/* Homepage variant: rows carry only index + headline + tag line
+   (Jeff's call, July 2026 — the noticing lines live on Work and the
+   case pages). Two columns so the headline isn't squeezed into the
+   four-column ledger's second track. */
+.ledger-brief .wrow{grid-template-columns:52px 1fr}
+@media(max-width:820px){.ledger-brief .wrow{grid-template-columns:40px 1fr}}
 @media(max-width:820px){
   .wrow{grid-template-columns:40px 1fr;row-gap:8px}
   .wrow>*:nth-child(3),.wrow>*:nth-child(4){grid-column:2}
