@@ -299,4 +299,32 @@
       clearTimeout(rt); rt = setTimeout(syncScrollers, 150);
     });
   }
+
+  /* ---- click-to-play film leads ----
+     A lead still with [data-embed] swaps itself for the player in place.
+     Without this the anchor just leaves for Vimeo, which reads as the CTA
+     doing nothing (Jeff, Aug 2026) — and costs the visitor the page.
+
+     The markup stays a real <a href> so it still works with JS off, or
+     when the film lives somewhere that can't be embedded (LiftOne sits on
+     UltraVideo's own site, so it has no data-embed and keeps leaving).
+     Nothing is requested from Vimeo until the click. */
+  document.querySelectorAll('.playlink[data-embed]').forEach(function (link) {
+    link.addEventListener('click', function (e) {
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+      e.preventDefault();
+      var slot = document.createElement('div');
+      slot.className = 'videoslot';
+      slot.style.aspectRatio = link.dataset.ratio || '16/9';
+      var f = document.createElement('iframe');
+      f.src = link.dataset.embed + (link.dataset.embed.indexOf('?') < 0 ? '?' : '&') +
+              'autoplay=1&dnt=1&title=0&byline=0&portrait=0';
+      f.title = link.getAttribute('aria-label') || 'Video';
+      f.allow = 'autoplay; fullscreen; picture-in-picture';
+      f.setAttribute('allowfullscreen', '');
+      f.referrerPolicy = 'strict-origin-when-cross-origin';
+      slot.appendChild(f);
+      link.replaceWith(slot);
+    });
+  });
 })();
