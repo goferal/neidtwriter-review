@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow"><!-- review build only -->
+<title>Neidt Writer — Redesign Direction</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Newsreader:ital,opsz,wght@0,6..72,200..700;1,6..72,200..600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F2EEE4;
+  --paper-2:#E7E1D2;
+  --ink:#16150F;
+  --ink-70:#5A574A;
+  --ink-40:#9A9585;
+  --rule:#16150F;
+  --flare:#F03C13;
+  --flare-soft:#FFE9E2;
+  --display:"Bricolage Grotesque",system-ui,sans-serif;
+  --body:"Newsreader",Georgia,serif;
+  --mono:"JetBrains Mono",ui-monospace,monospace;
+  --pad:clamp(20px,5vw,80px);
+  --maxw:1240px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--paper);color:var(--ink);
+  font-family:var(--body);font-size:18px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 var(--pad)}
+
+/* ---------- primitives ---------- */
+.rule{border:0;border-top:1px solid var(--rule);margin:0}
+.rule-thick{border:0;border-top:3px solid var(--rule);margin:0}
+.lbl{
+  font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-70);font-weight:500;
+}
+.lbl-flare{color:var(--flare)}
+h1,h2,h3,h4{font-family:var(--display);font-weight:600;line-height:1.02;letter-spacing:-.02em}
+h1{font-size:clamp(44px,8.5vw,116px);font-weight:700;letter-spacing:-.045em}
+h2{font-size:clamp(30px,4.6vw,60px);letter-spacing:-.035em}
+h3{font-size:clamp(21px,2.4vw,30px);letter-spacing:-.02em}
+h4{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:700}
+p{max-width:70ch}
+p+p{margin-top:1em}
+em{font-style:italic}
+strong{font-weight:600}
+a{color:var(--flare);text-underline-offset:3px}
+.flare{color:var(--flare)}
+.lead{font-size:clamp(20px,2.3vw,27px);line-height:1.4;max-width:34ch;font-weight:300}
+.small{font-size:15px;color:var(--ink-70);line-height:1.5}
+
+/* ---------- section scaffold: mono gutter + content ---------- */
+section{padding:clamp(48px,7vw,96px) 0;position:relative}
+.grid{display:grid;grid-template-columns:150px 1fr;gap:clamp(20px,4vw,56px);align-items:start}
+@media(max-width:840px){.grid{grid-template-columns:1fr;gap:16px}}
+.gutter{position:sticky;top:24px}
+@media(max-width:840px){.gutter{position:static}}
+
+/* ---------- cover ---------- */
+.cover{padding:clamp(40px,7vw,72px) 0 clamp(40px,6vw,64px)}
+.cover h1{margin:.18em 0 .3em;max-width:16ch}
+.coverbar{display:flex;flex-wrap:wrap;gap:8px 28px;align-items:baseline;padding-bottom:14px}
+.metaline{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:2px 28px;padding:16px 0}
+.metaline div span{display:block}
+
+/* ---------- ledger rows ---------- */
+.ledger{border-top:1px solid var(--rule)}
+.row{
+  display:grid;grid-template-columns:44px 1.25fr 1fr 110px;
+  gap:clamp(12px,2.5vw,32px);align-items:baseline;
+  padding:16px 0;border-bottom:1px solid var(--rule);
+  transition:background .18s ease,color .18s ease,padding .18s ease;
+}
+.row:hover{background:var(--flare);color:var(--paper);padding-left:12px;padding-right:12px}
+.row:hover .lbl,.row:hover .small,.row:hover .flare{color:var(--paper)}
+.row .t{font-family:var(--display);font-size:clamp(17px,2vw,23px);font-weight:600;letter-spacing:-.02em}
+@media(max-width:760px){
+  .row{grid-template-columns:36px 1fr;row-gap:4px}
+  .row>*:nth-child(3),.row>*:nth-child(4){grid-column:2}
+}
+
+/* ---------- cards / boxes ---------- */
+.cols{display:grid;gap:1px;background:var(--rule);border:1px solid var(--rule);margin-top:24px}
+.cols.c2{grid-template-columns:repeat(2,1fr)}
+.cols.c3{grid-template-columns:repeat(3,1fr)}
+.cols.c4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:840px){.cols.c3,.cols.c4{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.cols.c2,.cols.c3,.cols.c4{grid-template-columns:1fr}}
+.cell{background:var(--paper);padding:20px}
+.cell h4{margin-bottom:10px}
+.cell p{font-size:16px;line-height:1.5}
+
+.box{border:1px solid var(--rule);padding:clamp(18px,3vw,32px);margin-top:24px;background:var(--paper)}
+.box-flare{border-color:var(--flare);background:var(--flare-soft)}
+.box-solid{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.box-solid .lbl{color:var(--flare)}
+.box-solid a{color:var(--flare)}
+
+/* ---------- inverted section (the "loud moment") ---------- */
+.invert{background:var(--ink);color:var(--paper)}
+.invert .lbl{color:var(--flare)}
+.invert .rule,.invert .ledger,.invert .row{border-color:#3A382C}
+.invert .small{color:#B5B0A0}
+.invert .row:hover{background:var(--flare);color:var(--ink)}
+.invert .row:hover .small{color:var(--ink)}
+.invert .cols{background:#3A382C;border-color:#3A382C}
+.invert .cell{background:var(--ink)}
+.invert .box{border-color:#3A382C;background:var(--ink);color:var(--paper)}
+.invert .wire{background:repeating-linear-gradient(135deg,transparent,transparent 7px,rgba(242,238,228,.06) 7px,rgba(242,238,228,.06) 8px)}
+
+/* ---------- swatches / type specimen ---------- */
+.swatches{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);margin-top:24px}
+.sw{padding:0}
+.sw .chip{height:96px;display:block}
+.sw .info{padding:10px 12px;background:var(--paper)}
+.spec{border-top:1px solid var(--rule);padding:20px 0;display:grid;grid-template-columns:150px 1fr;gap:clamp(16px,3vw,40px)}
+@media(max-width:840px){.spec{grid-template-columns:1fr;gap:8px}}
+
+/* ---------- wireframe blocks ---------- */
+.wire{border:1px solid var(--rule);background:repeating-linear-gradient(135deg,transparent,transparent 7px,rgba(22,21,15,.055) 7px,rgba(22,21,15,.055) 8px);padding:14px;margin-top:1px}
+.wire .lbl{color:var(--ink)}
+.wire p{font-size:15px;color:var(--ink-70);margin-top:4px;line-height:1.45}
+.wirestack{border:1px solid var(--rule);margin-top:24px}
+.wirestack .wire{border:0;border-bottom:1px solid var(--rule)}
+.wirestack .wire:last-child{border-bottom:0}
+
+/* ---------- nav compare ---------- */
+.navdemo{font-family:var(--display);font-weight:600;font-size:clamp(15px,1.7vw,20px);display:flex;flex-wrap:wrap;gap:6px 22px;padding:14px 0}
+.strike{text-decoration:line-through;color:var(--ink-40);text-decoration-thickness:2px}
+
+.toc a{display:block;text-decoration:none;color:var(--ink);padding:9px 0;border-bottom:1px solid var(--rule);font-family:var(--display);font-weight:500;font-size:17px;transition:padding .16s ease,color .16s}
+.toc a:hover{padding-left:10px;color:var(--flare)}
+.toc a span{font-family:var(--mono);font-size:11px;color:var(--ink-40);margin-right:14px}
+
+ul.tight{margin:12px 0 0 0;padding-left:0;list-style:none}
+ul.tight li{padding:8px 0 8px 32px;border-bottom:1px solid rgba(22,21,15,.16);font-size:16.5px;line-height:1.45;position:relative}
+ul.tight li:before{content:"—";color:var(--flare);font-family:var(--mono);position:absolute;left:0}
+.invert ul.tight li{border-color:#3A382C}
+
+.q{display:grid;grid-template-columns:34px 1fr;gap:12px;padding:14px 0;border-bottom:1px solid var(--rule)}
+.q .n{font-family:var(--mono);font-size:12px;color:var(--flare);padding-top:5px}
+.q p{font-size:16px;margin-top:4px;color:var(--ink-70)}
+.q b{font-family:var(--display);font-size:18px;font-weight:600;letter-spacing:-.01em}
+
+.hl{background:var(--flare);color:var(--paper);padding:0 .18em}
+footer{padding:56px 0 72px;border-top:3px solid var(--rule)}
+@media print{.gutter{position:static}section{padding:32px 0}}
+</style>
+</head>
+<body>
+
+<!-- ============ COVER ============ -->
+<div class="wrap">
+<header class="cover">
+  <hr class="rule-thick">
+  <div class="coverbar" style="padding-top:14px">
+    <span class="lbl">Neidt Writer</span>
+    <span class="lbl">Website Redesign</span>
+    <span class="lbl lbl-flare">Direction — v1</span>
+    <span class="lbl" style="margin-left:auto">30 July 2026</span>
+  </div>
+  <hr class="rule">
+  <h1>Stop selling<br>the writing.<br><span class="flare">Sell the noticing.</span></h1>
+  <p class="lead">A strategy and design direction for neidtwriter.com — built around the one line in Jeff's notes that should have been the site all along.</p>
+  <div class="metaline">
+    <div><span class="lbl">Prepared by</span><span>Michael Colin Ashfield</span></div>
+    <div><span class="lbl">Client</span><span>Jeff Neidt</span></div>
+    <div><span class="lbl">Scope</span><span>Positioning, IA, visual system, content plan</span></div>
+    <div><span class="lbl">Next</span><span>Build the homepage</span></div>
+  </div>
+  <hr class="rule">
+  <p class="small" style="padding-top:14px;max-width:62ch"><strong>How to read this:</strong> this document is <em>built in the design system it's proposing</em>. The colors, type, hairline rules and ledger rows you're looking at are the actual spec. If this feels like Jeff, we're close. If it doesn't, we've saved ourselves a round.</p>
+</header>
+
+<!-- ============ TOC ============ -->
+<section style="padding-top:8px">
+  <div class="grid">
+    <div class="gutter"><span class="lbl">Contents</span></div>
+    <div class="toc" style="border-top:1px solid var(--rule)">
+      <a href="#diagnosis"><span>01</span>What's actually wrong with the current site</a>
+      <a href="#positioning"><span>02</span>The positioning</a>
+      <a href="#nav"><span>03</span>Navigation &amp; sitemap</a>
+      <a href="#work"><span>04</span>Work: the reorganization</a>
+      <a href="#visual"><span>05</span>The visual system</a>
+      <a href="#pages"><span>06</span>Page by page</a>
+      <a href="#nonbillable"><span>07</span>Non-Billable — the loud room</a>
+      <a href="#jeff"><span>08</span>What we need from Jeff</a>
+      <a href="#build"><span>09</span>Build plan</a>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- ============ 01 DIAGNOSIS ============ -->
+<div class="wrap">
+<section id="diagnosis">
+  <div class="grid">
+    <div class="gutter"><span class="lbl">01 / Diagnosis</span></div>
+    <div>
+      <h2>The site isn't dated.<br>It's <span class="flare">underpriced.</span></h2>
+      <p style="margin-top:22px">Jeff's instinct is right, and his own note names it: the site "leans slightly too hard on the word <em>writer</em>, which inadvertently downcharges your strategic value." That's the whole brief. Everything else is symptom.</p>
+
+      <div class="cols c2">
+        <div class="cell">
+          <h4 class="flare">Symptom</h4>
+          <p><strong>"I'm (not just) a writer."</strong> The headline defines him by what he <em>isn't</em>. Negative constructions never sell up — they read as apology.</p>
+        </div>
+        <div class="cell">
+          <h4 class="flare">Symptom</h4>
+          <p><strong>"Concepts + Copy."</strong> Both words are deliverables. A CD buying deliverables pays a day rate. A CMO buying judgment pays a retainer.</p>
+        </div>
+        <div class="cell">
+          <h4 class="flare">Symptom</h4>
+          <p><strong>130 client names in a wall.</strong> Target next to Pronto Pups. Volume without hierarchy reads as "available," not "selective."</p>
+        </div>
+        <div class="cell">
+          <h4 class="flare">Symptom</h4>
+          <p><strong>Blog: 3 posts, last one Aug 2020.</strong> A visibly abandoned Insights section is worse than none — it dates the whole site to six years ago.</p>
+        </div>
+        <div class="cell">
+          <h4 class="flare">Symptom</h4>
+          <p><strong>Work sorted by client, tagged by format.</strong> "Elkay — Advertising." That's a vendor's filing system. It tells a buyer nothing about what problem got solved.</p>
+        </div>
+        <div class="cell">
+          <h4 class="flare">Symptom</h4>
+          <p><strong>Six nav items, one of which is a list.</strong> Home / About / Clients / Work / Insights / Contact. Clients isn't a destination, it's a proof point in the wrong place.</p>
+        </div>
+      </div>
+
+      <div class="box box-flare">
+        <span class="lbl">The buried lede</span>
+        <h3 style="margin:10px 0 12px">3M's first global brand campaign in 25 years — and it's a tile in a grid.</h3>
+        <p style="font-size:16.5px">Jeff worked on <em>Science Applied to Life</em> alongside Wolff Olins, BBDO New York and BBDO Minneapolis. That single credit answers the question his notes keep circling — <em>"how do I show larger-scale solutions?"</em> — better than any Caper Method section ever could. Right now it's a thumbnail labeled "3M Brand — Branding," visually equal to a neighborhood brewery.</p>
+      </div>
+
+      <div class="box">
+        <span class="lbl">What's already working — keep it</span>
+        <ul class="tight">
+          <li>The voice. "I'm shorter than you'd imagine," the Whitman lift, the oxford comma bit. It's specific and it's his. We're not sanding that off — we're aiming it higher.</li>
+          <li>The client roster is genuinely deep. 3M, Target, Google, Microsoft, Optum, Chobani, Colgate, Hilton, Cargill, US Army. The problem is presentation, not substance.</li>
+          <li>Agency-side relationships (BBDO, Wolff Olins, Fast Horse, KNOCK, Mythic, Publicis) — that's a second, separate business and it deserves its own line.</li>
+          <li>"Craft clients." Buried on the About page. It's a real filter and it's well put.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+
+<hr class="rule-thick">
+
+<!-- ============ 02 POSITIONING ============ -->
+<div class="wrap">
+<section id="positioning">
+  <div class="grid">
+    <div class="gutter"><span class="lbl">02 / Positioning</span></div>
+    <div>
+      <h2>Jeff already wrote it.<br>It's in his notes.</h2>
+      <div class="box box-flare" style="margin-top:26px">
+        <span class="lbl">From the brief, under "Thoughts"</span>
+        <p style="font-family:var(--display);font-size:clamp(24px,3.4vw,42px);font-weight:600;letter-spacing:-.03em;line-height:1.08;margin-top:10px;max-width:20ch">"Value is the art of noticing, making connections."</p>
+      </div>
+
+      <p style="margin-top:26px">That line does three jobs at once, which is why it should be the spine of the site:</p>
+      <div class="cols c3">
+        <div class="cell">
+          <h4>1. It's the strategy</h4>
+          <p>Positioning <em>is</em> noticing — finding the true thing a company can't see because they're inside it. "The average person uses 3M technology 100 times a day" is a noticing, not a copy line.</p>
+        </div>
+        <div class="cell">
+          <h4>2. It rescues "writer"</h4>
+          <p>It reframes writing as the <em>evidence</em> of strategic thinking rather than the service. Writers notice for a living. That's a credential, not a limitation.</p>
+        </div>
+        <div class="cell">
+          <h4>3. It saves the domain</h4>
+          <p>No rebrand needed. neidtwriter.com stops being a ceiling the moment the site argues that the writing is <em>how</em> the strategy gets proven.</p>
+        </div>
+      </div>
+
+      <h3 style="margin-top:48px">Positioning statement</h3>
+      <div class="box box-solid">
+        <p style="font-family:var(--display);font-size:clamp(19px,2.3vw,27px);font-weight:400;letter-spacing:-.02em;line-height:1.32;max-width:44ch">Jeff Neidt is a <strong>brand strategist and creative director</strong> who builds foundations — positioning, architecture, platforms — and then proves them in language precise enough to survive contact with a 60,000-product company.</p>
+        <hr class="rule" style="border-color:#3A382C;margin:22px 0">
+        <p class="small" style="max-width:60ch">Said shorter, for a bio line: <em>Brand strategy and creative direction, with a writer's ear for the difference between true and almost true.</em></p>
+      </div>
+
+      <h3 style="margin-top:48px">Homepage headline — three territories</h3>
+      <p class="small" style="margin-top:8px">All three keep the voice. They differ in how hard they push the reposition. My recommendation is <strong class="flare">A</strong>.</p>
+
+      <div class="ledger" style="margin-top:22px">
+        <div class="row">
+          <span class="lbl flare">A</span>
+          <div>
+            <span class="t">Most brand problems<br>are noticing problems.</span>
+            <p class="small" style="margin-top:8px">Sub: <em>I'm Jeff Neidt. I find the true thing your company can't see anymore — then write it down in a way people repeat.</em></p>
+          </div>
+          <p class="small">Leads with a strategic claim, not a service. Sets up every case study to pay it off. Owns a word nobody else in this category owns.</p>
+          <span class="lbl">Recommended</span>
+        </div>
+        <div class="row">
+          <span class="lbl">B</span>
+          <div>
+            <span class="t">A brand is a sentence<br>somebody has to repeat.</span>
+            <p class="small" style="margin-top:8px">Sub: <em>Most of them aren't written well. That's usually a strategy problem wearing a copy problem's clothes.</em></p>
+          </div>
+          <p class="small">The most elegant argument for why a writer should lead strategy. Slightly narrower — frames everything as verbal, undersells the creative direction.</p>
+          <span class="lbl">Strong alt</span>
+        </div>
+        <div class="row">
+          <span class="lbl">C</span>
+          <div>
+            <span class="t">Twenty years of<br>paying attention.</span>
+            <p class="small" style="margin-top:8px">Sub: <em>Brand strategy, creative direction, and the writing that holds both together.</em></p>
+          </div>
+          <p class="small">Safest. Credential-forward, reads senior immediately, least distinctive. The one to pick if Jeff gets cold feet.</p>
+          <span class="lbl">Safe</span>
+        </div>
+      </div>
+
+      <h3 style="margin-top:48px">Four values — the Distill move, made his</h3>
+      <p class="small" style="margin-top:8px">Jeff flagged Distill Health's four values ("Be smart / Be real / Be diligent / Be curious"). Same structural device, but built off <em>noticing</em> so it reinforces the positioning instead of floating free. These live on About.</p>
+      <div class="cols c4">
+        <div class="cell"><h4 class="flare">01 — Notice first</h4><p>The brief is never the problem. The problem is the thing nobody in the room said out loud yet.</p></div>
+        <div class="cell"><h4 class="flare">02 — Say it plain</h4><p>If it needs a glossary, it isn't finished. Clarity isn't the opposite of craft — it's the proof of it.</p></div>
+        <div class="cell"><h4 class="flare">03 — Make the connection</h4><p>Good ideas are usually two known things nobody had put next to each other. That's the job.</p></div>
+        <div class="cell"><h4 class="flare">04 — Leave it better</h4><p>Good work makes somebody feel something — confident, assured, seen. If nobody feels anything, it was just output.</p></div>
+      </div>
+      <p class="small" style="margin-top:12px">Value 04 is lifted almost directly from his note: <em>"Thoughts about what's good work: Make somebody feel a certain way. Feel good. Or confident. Or assured."</em></p>
+    </div>
+  </div>
+</section>
+</div>
+
+<hr class="rule-thick">
+
+<!-- ============ 03 NAV ============ -->
+<div class="wrap">
+<section id="nav">
+  <div class="grid">
+    <div class="gutter"><span class="lbl">03 / Navigation</span></div>
+    <div>
+      <h2>Four items. One of them<br>makes people click.</h2>
+
+      <p style="margin-top:22px">Jeff proposed <em>Work / About / Non-Billable Project / Contact</em> and separately floated <em>Work / About / Insights / Contact</em>. The first is right, with one edit.</p>
+
+      <div style="margin-top:26px">
+        <span class="lbl">Now</span>
+        <hr class="rule" style="margin-top:8px">
+        <div class="navdemo"><span class="strike">Home</span><span class="strike">About</span><span class="strike">Clients</span><span class="strike">Work</span><span class="strike">Insights</span><span class="strike">Contact</span></div>
+        <hr class="rule">
+        <span class="lbl lbl-flare" style="display:block;margin-top:24px">Proposed</span>
+        <hr class="rule" style="margin-top:8px">
+        <div class="navdemo"><span>Work</span><span>About</span><span class="flare">Non-Billable</span><span>Contact</span></div>
+        <hr class="rule">
+      </div>
+
+      <div class="cols c2">
+        <div class="cell"><h4>Why drop "Project"</h4><p>"Non-Billable Project" is three words in a four-item nav — it wobbles the line and reads as one specific thing. <strong>"Non-Billable"</strong> is one word, slightly mysterious, and unmistakably a point of view. It's the only nav item on any freelance CD's site that makes a stranger curious. Keep the full phrase as the page's H1.</p></div>
+        <div class="cell"><h4>Why "Clients" dies</h4><p>A 130-name list isn't a destination — nobody navigates <em>to</em> it. It becomes two things instead: a logo/name marquee on the homepage (the recognizable 20), and a full expandable roster at the bottom of Work for the people who want to scan it.</p></div>
+        <div class="cell"><h4>Why "Home" dies</h4><p>The logo goes home. Every site works this way now; the nav item is a 2012 artifact and it's costing a slot.</p></div>
+        <div class="cell"><h4>Where Insights goes</h4><p>Folded into Non-Billable. See §07 — it's the fix for the dead-blog problem, not a rename.</p></div>
+      </div>
+
+      <h3 style="margin-top:48px">Sitemap</h3>
+      <div class="ledger" style="margin-top:20px">
+        <div class="row"><span class="lbl flare">/</span><div><span class="t">Home</span></div><p class="small">Positioning, 6 selected projects, returning-client proof, client marquee, one human moment, contact.</p><span class="lbl">Priority 1</span></div>
+        <div class="row"><span class="lbl flare">/work</span><div><span class="t">Work</span></div><p class="small">All projects as a filterable ledger, grouped into Foundations / Campaigns / Content &amp; Film. Full client roster at the bottom.</p><span class="lbl">Priority 1</span></div>
+        <div class="row"><span class="lbl flare">/work/…</span><div><span class="t">Case studies</span></div><p class="small">One template, five fields. ~10–14 pages. See §04.</p><span class="lbl">Priority 1</span></div>
+        <div class="row"><span class="lbl flare">/about</span><div><span class="t">About</span></div><p class="small">Who he is now, four values, experience, how he works, new photo.</p><span class="lbl">Priority 1</span></div>
+        <div class="row"><span class="lbl flare">/non-billable</span><div><span class="t">Non-Billable</span></div><p class="small">Inverted design. Things I've Noticed + essays + Patron &amp; Saint.</p><span class="lbl">Priority 2</span></div>
+        <div class="row"><span class="lbl flare">/contact</span><div><span class="t">Contact</span></div><p class="small">Email, LinkedIn, and "Before you ask" — the FAQ, folded in here.</p><span class="lbl">Priority 1</span></div>
+        <div class="row"><span class="lbl flare">/noticed</span><div><span class="t">Things I've Noticed</span></div><p class="small">Child of Non-Billable. The running numbered list. Also the LinkedIn engine.</p><span class="lbl">Priority 2</span></div>
+      </div>
+      <p class="small" style="margin-top:14px"><strong>Six templates, not sixty.</strong> Home, Work index, Case study, Standard page (About/Contact), Non-Billable index, Noticed list. That's the whole build.</p>
+    </div>
+  </div>
+</section>
+</div>
+
+<hr class="rule-thick">
+
+<!-- ============ 04 WORK ============ -->
+<div class="wrap">
+<section id="work">
+  <div class="grid">
+    <div class="gutter"><span class="lbl">04 / Work</span></div>
+    <div>
+      <h2>Sort by the problem,<br>not by the client.</h2>
+      <p style="margin-top:22px">Jeff asked: 12 samples, or 3 and a link? <strong>Neither.</strong> The count isn't the issue — the taxonomy is. Right now work is filed by client and tagged by deliverable ("Elkay — Advertising"), which is how a vendor organizes a portfolio. Three categories, ordered deliberately, do the repositioning silently:</p>
+
+      <div class="cols c3">
+        <div class="cell">
+          <h4 class="flare">01 — Foundations</h4>
+          <p style="margin-bottom:10px">Brand platforms, positioning, naming, architecture, messaging systems. The highest-value work, listed first, so it's the first thing a buyer sees.</p>
+          <p class="small">3M · Microsoft ExpertZone · Hyde Brewing · Velera* · Vetter* · LTD Brewing</p>
+        </div>
+        <div class="cell">
+          <h4 class="flare">02 — Campaigns</h4>
+          <p style="margin-bottom:10px">Go-to-market, integrated, advertising. The proof he can carry a platform all the way to market.</p>
+          <p class="small">Optum · Petco · Northstar · Elkay · Riverlights* · Invisalign* · UHC* · Ball Park Cafe</p>
+        </div>
+        <div class="cell">
+          <h4 class="flare">03 — Content &amp; Film</h4>
+          <p style="margin-bottom:10px">Long-form, editorial, scripted video. Where the volume and the range live.</p>
+          <p class="small">3M Content (200+ stories) · SportsEngine · LiftOne* · Dentsply* · NBC Sports* · Rotten Tomatoes*</p>
+        </div>
+      </div>
+      <p class="small" style="margin-top:12px">* Needs Jeff to confirm role, year and assets before it goes live — see §08.</p>
+
+      <div class="box">
+        <span class="lbl">Answering "how do I show larger-scale solutions?"</span>
+        <p style="margin-top:10px">Not with a Caper Method section — <strong>with a collaborator line.</strong> "With Wolff Olins, BBDO New York and BBDO Minneapolis" under the 3M case study does in eight words what a paragraph about a creative collective can't. It proves he operates at that altitude without him having to claim it. <span class="flare">Recommendation: retire Caper Method as a section; keep it as a credit where relevant.</span></p>
+      </div>
+
+      <h3 style="margin-top:48px">Case study template — five fields, one of them is the whole strategy</h3>
+      <div class="wirestack">
+        <div class="wire"><span class="lbl">01 — The situation</span><p>Two sentences. What the company faced. No throat-clearing, no "in today's crowded marketplace."</p></div>
+        <div class="wire" style="background:var(--flare-soft);border-left:3px solid var(--flare)"><span class="lbl lbl-flare">02 — What I noticed</span><p><strong>One sentence, set large, in the display face.</strong> The insight that unlocked it. This field is the entire positioning, repeated 14 times across the site. 3M's is already written and it's perfect: <em>"The average person touches 3M technology 100 times a day and can't name the company once."</em></p></div>
+        <div class="wire"><span class="lbl">03 — What we made</span><p>Deliverables, plainly listed. Scale lives here: "brand platform copy across five business divisions, a brand training hub, and 200+ newsroom stories in ten months."</p></div>
+        <div class="wire"><span class="lbl">04 — What happened</span><p>Result, <em>attributed</em> where it's the agency's or client's number. "ChappellRoberts reports the campaign beat sales goals by 160%" — never stated flat. Where there's no metric, say what shipped and where it ran. Omitting the section entirely is fine; faking it isn't.</p></div>
+        <div class="wire"><span class="lbl">05 — Credits</span><p>Role · Year · Agency · Collaborators. Mono type, small, factual. This is the seniority signal.</p></div>
+      </div>
+
+      <h3 style="margin-top:48px">Work index — the ledger</h3>
+      <p class="small" style="margin-top:8px">Rows, not cards. Cards make 12 projects look like a template; rows make them look like an index, scale to 30 without redesigning, and let the mono metadata carry the seniority. Hover to see it invert. This is the site's signature interaction — try it:</p>
+      <div class="ledger" style="margin-top:20px">
+        <div class="row"><span class="lbl">01</span><div><span class="t">Science Applied to Life</span></div><p class="small">3M — global brand platform, first in 25 years. With Wolff Olins + BBDO.</p><span class="lbl">Foundations</span></div>
+        <div class="row"><span class="lbl">02</span><div><span class="t">Have the foresight to eliminate hindsight</span></div><p class="small">Optum — Claims Manager campaign. With Bolster.</p><span class="lbl">Campaign</span></div>
+        <div class="row"><span class="lbl">03</span><div><span class="t">200 stories, ten months</span></div><p class="small">3M — newsroom content engine. With BBDO Minneapolis.</p><span class="lbl">Content</span></div>
+        <div class="row"><span class="lbl">04</span><div><span class="t">ExpertZone</span></div><p class="small">Microsoft — retail training brand.</p><span class="lbl">Foundations</span></div>
+        <div class="row"><span class="lbl">05</span><div><span class="t">State of Shine</span> <span class="lbl flare">— unconfirmed</span></div><p class="small">Riverlights — placemaking campaign. With ChappellRoberts.</p><span class="lbl">Campaign</span></div>
+        <div class="row"><span class="lbl">06</span><div><span class="t">We Promise</span> <span class="lbl flare">— unconfirmed</span></div><p class="small">LiftOne — B2B brand film. With UltraVideo.</p><span class="lbl">Film</span></div>
+      </div>
+
+      <h3 style="margin-top:48px">The clients problem</h3>
+      <p style="margin-top:10px">Jeff asked how to repurpose the list. Three moves:</p>
+      <div class="cols c3">
+        <div class="cell"><h4>Marquee, not wall</h4><p>Homepage: a slow horizontal ticker of ~20 recognizable names in the display face — 3M, Target, Google, Microsoft, Optum, Chobani, Colgate-Palmolive, Hilton, Cargill, General Mills, Petco, US Army. Names, not logos: cheaper, cleaner, no permissions problem, and it stays on-brand as a typographic site.</p></div>
+        <div class="cell"><h4>Split the audiences</h4><p>Two roster columns at the bottom of Work: <strong>Brands</strong> and <strong>Agencies</strong>. He sells to both and they buy for different reasons. The agency list (BBDO, Wolff Olins, Publicis, Fast Horse, KNOCK, Mythic) is a credential the brand list can't carry.</p></div>
+        <div class="cell"><h4>The returning-client stat</h4><p>His best line and it's nowhere on the site. Put a real number on the homepage: <span class="hl">"Most of my clients hire me more than once."</span> Better if he'll count it — "X of my last Y engagements were repeat clients." That single fact outperforms 130 names.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+
+<hr class="rule-thick">
+
+<!-- ============ 05 VISUAL ============ -->
+<div class="wrap">
+<section id="visual">
+  <div class="grid">
+    <div class="gutter"><span class="lbl">05 / Visual system</span></div>
+    <div>
+      <h2>Quiet paper.<br>Hard lines.<br><span class="flare">One loud color.</span></h2>
+      <p style="margin-top:22px">Jeff's references pull two ways: Riot Fest, Waterparks and Brutalist Brewing are loud and graphic; selfaware.studio and the Cargo templates are warm and quiet — and he says selfaware "is probably closer to what I am." He's right, but the loud references aren't noise, they're the personality he doesn't want to lose. So: <strong>an editorial base that can go loud on command.</strong> Warm paper and serif body text for the enterprise buyer at Optum. Hairline rules, mono labels and a vermilion accent for the personality. And a fully inverted Non-Billable section where the volume goes all the way up.</p>
+
+      <h3 style="margin-top:44px">Palette</h3>
+      <div class="swatches">
+        <div class="sw"><span class="chip" style="background:#F2EEE4;border-bottom:1px solid var(--rule)"></span><div class="info"><span class="lbl">Paper</span><br><span class="lbl">#F2EEE4</span></div></div>
+        <div class="sw"><span class="chip" style="background:#E7E1D2;border-bottom:1px solid var(--rule)"></span><div class="info"><span class="lbl">Paper 2</span><br><span class="lbl">#E7E1D2</span></div></div>
+        <div class="sw"><span class="chip" style="background:#16150F"></span><div class="info"><span class="lbl">Ink</span><br><span class="lbl">#16150F</span></div></div>
+        <div class="sw"><span class="chip" style="background:#F03C13"></span><div class="info"><span class="lbl">Flare</span><br><span class="lbl">#F03C13</span></div></div>
+        <div class="sw"><span class="chip" style="background:#5A574A"></span><div class="info"><span class="lbl">Ink 70</span><br><span class="lbl">#5A574A</span></div></div>
+        <div class="sw"><span class="chip" style="background:#FFE9E2;border-bottom:1px solid var(--rule)"></span><div class="info"><span class="lbl">Flare soft</span><br><span class="lbl">#FFE9E2</span></div></div>
+      </div>
+      <p class="small" style="margin-top:14px"><strong>Why vermilion and not the obvious acid green.</strong> Riot Fest's electric palette goes muddy against warm paper — high-chroma greens and cyans fight cream. Vermilion (#F03C13) sits in the same family as ink and printing, holds its saturation on a warm ground, reads confident rather than gimmicky, and passes contrast on both paper and ink. It's used at roughly <strong>3% coverage</strong>: labels, one word in the headline, hover states, and the Non-Billable room. Restraint is what makes it loud.</p>
+
+      <h3 style="margin-top:44px">Type</h3>
+      <div class="spec">
+        <div><span class="lbl">Display</span><br><span class="lbl">Bricolage Grotesque</span></div>
+        <div>
+          <span style="font-family:var(--display);font-size:clamp(28px,4vw,50px);font-weight:600;letter-spacing:-.035em;line-height:1.02;display:block">Most brand problems<br>are noticing problems.</span>
+          <p class="small" style="margin-top:12px">A grotesk with deliberate wonky details — variable weight and optical size, free on Google Fonts. Reads professional at a glance and slightly odd on inspection, which is exactly the brief: personality that doesn't spook a healthcare CMO. Used for H1–H3, work titles, and nav.</p>
+        </div>
+      </div>
+      <div class="spec">
+        <div><span class="lbl">Body</span><br><span class="lbl">Newsreader</span></div>
+        <div>
+          <span style="font-family:var(--body);font-size:21px;line-height:1.5;display:block;max-width:52ch">A serif body face is the single cheapest way to make a strategist who writes look like a strategist who writes. It signals editorial credibility, it reads beautifully at length, and it separates him instantly from the all-sans portfolio template.</span>
+          <p class="small" style="margin-top:12px">Variable, free, warm, designed for screen. Used for all running text, leads, and case study prose.</p>
+        </div>
+      </div>
+      <div class="spec">
+        <div><span class="lbl">Utility</span><br><span class="lbl">JetBrains Mono</span></div>
+        <div>
+          <span class="lbl" style="font-size:14px;display:block">LABELS · CATEGORIES · YEARS · ROLE · CREDITS · NAVIGATION META</span>
+          <p class="small" style="margin-top:12px">The brutalist device, applied with a scalpel. Every label, credit and category is mono uppercase at 11–12px with wide tracking. It's what makes the layout read as an index or a spec sheet rather than a portfolio — and it's doing the "use of design and lines" job from his Brutalist Brewing reference.</p>
+        </div>
+      </div>
+      <div class="spec" style="border-bottom:1px solid var(--rule)">
+        <div><span class="lbl">Scale</span></div>
+        <div><p class="small">H1 clamp(44px, 8.5vw, 116px) / -0.045em · H2 clamp(30px, 4.6vw, 60px) · H3 clamp(21px, 2.4vw, 30px) · Body 18px/1.55 · Lead clamp(20px, 2.3vw, 27px) weight 300 · Label 11px/0.14em. Measure caps at 70ch for prose, 34ch for leads.</p></div>
+      </div>
+
+      <h3 style="margin-top:44px">Structure &amp; devices</h3>
+      <div class="cols c2">
+        <div class="cell"><h4>The hairline</h4><p>1px ink rules separate everything; 3px rules separate chapters. No shadows, no rounded corners, no cards floating on grey. Borders do all the containing. This is the Brutalist Brewing lesson applied to a warm palette.</p></div>
+        <div class="cell"><h4>The mono gutter</h4><p>A 150px left column carries a sticky mono section label while content scrolls past it on the right. Cheap to build, instantly distinctive, and it makes long pages navigable. It's the layout device you're reading right now.</p></div>
+        <div class="cell"><h4>Ledger rows</h4><p>Work, insights and the noticed list are all rows with mono metadata, not image cards. Scales to any count, loads instantly, and puts the writing first — appropriate for a writer.</p></div>
+        <div class="cell"><h4>The invert</h4><p>Full-bleed ink sections with vermilion accents mark the personality moments. Used sparingly: the Non-Billable page, one homepage band, the footer. The contrast is the point — it only reads loud because the rest is quiet.</p></div>
+        <div class="cell"><h4>Grid cells</h4><p>1px-gap grids over an ink background produce hairline-divided modules with no extra markup. Used for values, categories, FAQ. See the four-value block in §02.</p></div>
+        <div class="cell"><h4>Images, finally</h4><p>The current site is starved of imagery. Work needs real stills. Recommendation: consistent treatment — full-bleed, warm-toned, no drop shadows, no laptop mockups. And one honest portrait of Jeff, not a headshot.</p></div>
+      </div>
+
+      <h3 style="margin-top:44px">Motion</h3>
+      <ul class="tight">
+        <li><strong>Rules draw in.</strong> Hairlines animate scaleX 0→1 on scroll entry, 400ms, staggered. Subtle, and it makes the structure feel drawn rather than placed.</li>
+        <li><strong>Rows invert on hover.</strong> Background fills vermilion, type flips to paper, row insets 12px. 180ms. This is the one piece of delight and it's on the most-used element.</li>
+        <li><strong>Headlines reveal by line</strong> on first paint only. Never on scroll — text that animates in every time is an accessibility problem and it gets old by page three.</li>
+        <li><strong>No parallax, no scroll-jacking, no cursor followers.</strong> They're the tell of a site designed to impress designers. His buyers are CMOs and agency ECDs.</li>
+        <li><strong>prefers-reduced-motion: reduce</strong> disables everything except opacity. Non-negotiable.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+</div>
+
+<hr class="rule-thick">
+
+<!-- ============ 06 PAGES ============ -->
+<div class="wrap">
+<section id="pages">
+  <div class="grid">
+    <div class="gutter"><span class="lbl">06 / Page by page</span></div>
+    <div>
+      <h2>What goes where.</h2>
+
+      <h3 style="margin-top:36px">Home</h3>
+      <div class="wirestack">
+        <div class="wire"><span class="lbl">01 — Hero</span><p>Headline territory A, set at 116px. One line of sub-copy. No image, no hero video. A wall of type on warm paper, with one word in vermilion. Confidence is the visual.</p></div>
+        <div class="wire"><span class="lbl">02 — Positioning paragraph</span><p>Three sentences, serif, 34ch measure. What he does, who for, why it's different. Ends with the returning-client stat.</p></div>
+        <div class="wire"><span class="lbl">03 — Selected work</span><p>Six ledger rows, two per category. Each shows title, client, one-line "what I noticed," and category. Link: "All work →".</p></div>
+        <div class="wire"><span class="lbl">04 — Client marquee</span><p>Slow typographic ticker, ~20 names. Beneath it, quietly: "and about 180 others."</p></div>
+        <div class="wire" style="background:var(--ink);color:var(--paper)"><span class="lbl lbl-flare">05 — The invert band</span><p style="color:#B5B0A0">One human moment on ink. Pull three items from Things I've Noticed, or the "what makes work good" line: <em style="color:var(--paper)">"Good work makes somebody feel a certain way. Good. Or confident. Or assured."</em> Links to Non-Billable.</p></div>
+        <div class="wire"><span class="lbl">06 — Contact</span><p>One line, one email link, done. No form on the homepage.</p></div>
+      </div>
+
+      <h3 style="margin-top:44px">About</h3>
+      <div class="wirestack">
+        <div class="wire"><span class="lbl">01 — Who he is now</span><p>The reposition, stated plainly. Copywriter/ACD → Creative Director &amp; Brand Strategist. Explicitly claim brand foundations, B2B positioning, and multi-channel creative direction — his own words from the brief, promoted to the page.</p></div>
+        <div class="wire"><span class="lbl">02 — Portrait</span><p>New image, per his note. Environmental, warm, not a corporate headshot. Ideally where he actually works.</p></div>
+        <div class="wire"><span class="lbl">03 — Four values</span><p>The Distill-style grid from §02, in hairline cells.</p></div>
+        <div class="wire"><span class="lbl">04 — Experience</span><p>Mono ledger: years, role, org. Independent since 2013. Prior: LaBreche, SUPERVALU, Slate. Teaching: University of Minnesota CCAPS, The Loft Literary Center, and writing/poetry in the US and Germany. <strong>The teaching is an asset</strong> — someone who teaches strategy and writing at a university is not a day-rate copywriter. It's currently a throwaway line.</p></div>
+        <div class="wire"><span class="lbl">05 — How I work</span><p>Absorbs "Working with me?" from his notes. Short: solo by default, assembles teams when scale demands it, works inside agency processes or around them. Craft clients. Returning clients. This is also where Caper Method gets a sentence instead of a section.</p></div>
+      </div>
+
+      <h3 style="margin-top:44px">Contact</h3>
+      <div class="wirestack">
+        <div class="wire"><span class="lbl">01 — The invitation</span><p>Keep the existing voice — "we can grab a coffee or a beer" is good and it's his. Tighten it.</p></div>
+        <div class="wire"><span class="lbl">02 — Direct</span><p>Email (recommend shortening to <strong>jeff@neidtwriter.com</strong> — needs confirming where it currently routes). LinkedIn — <span class="flare">his current link is the dead /pub/ format and needs updating</span>. Instagram optional. <strong>Twitter/X: drop it</strong>, per his instinct. A dormant profile is a liability, not a channel.</p></div>
+        <div class="wire"><span class="lbl">03 — A form, as backup</span><p>Name, email, what you're working on, timeline. Some corporate buyers can't mailto. Netlify Forms or Formspree — zero backend.</p></div>
+        <div class="wire" style="background:var(--flare-soft);border-left:3px solid var(--flare)"><span class="lbl lbl-flare">04 — "Before you ask"</span><p>This is the FAQ, and it belongs here rather than as its own nav item — an FAQ page nobody navigates to is a dead page, but an FAQ under Contact catches people at the exact moment of hesitation. Six questions, in his voice: <em>What does a typical engagement look like? Do you work through agencies? What's the smallest thing worth calling you about? How do you charge? Can you lead a project, or only write it? What if we don't know what we need yet?</em> That last one is the highest-converting question on any consultant's site.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- ============ 07 NON-BILLABLE (INVERTED) ============ -->
+<div class="invert">
+<div class="wrap">
+<section id="nonbillable">
+  <div class="grid">
+    <div class="gutter"><span class="lbl">07 / Non-Billable</span></div>
+    <div>
+      <h2 style="color:var(--paper)">The room where<br>the volume<br><span class="flare">goes up.</span></h2>
+      <p style="margin-top:22px;color:#D8D3C4">This is the loud moment the hybrid direction was built for. Inverted ground, vermilion accents, bigger type, looser rules. It's also where three of Jeff's open questions get solved at once — the dead blog, the "17 random things" personality problem, and the LinkedIn tie-in.</p>
+
+      <div class="box" style="border-color:var(--flare)">
+        <span class="lbl">The blog problem, stated honestly</span>
+        <p style="margin-top:10px;color:#D8D3C4">Three posts. Last one August 2020. Jeff is not going to start blogging — nobody with a full client load does, and pretending otherwise just puts another "last updated 2020" timestamp on the site in eighteen months. <strong style="color:var(--paper)">So don't build a blog. Build a habit that's small enough to actually keep.</strong></p>
+      </div>
+
+      <h3 style="margin-top:44px;color:var(--paper)">Things I've Noticed</h3>
+      <p style="margin-top:12px;color:#D8D3C4">Jeff flagged Gari Cruze's <em>17 Random Things</em> — great page, and the instinct behind it is right: buyers hire people, not portfolios. But copying the format (and the number) is a tell, and "random" is the one word we can't use on a site arguing that his value is <em>noticing</em>.</p>
+      <p style="margin-top:1em;color:#D8D3C4">So: a running numbered list with no fixed count. Observations, half of them about brands and half about his kids or a parking lot or a badly worded sign. It's the personality page, the proof of the positioning, and the content engine — all one object.</p>
+
+      <div class="cols c3" style="margin-top:26px">
+        <div class="cell"><h4 class="flare">It proves the thesis</h4><p style="color:#B5B0A0">A site that claims "value is the art of noticing" and then shows 60 things he's noticed isn't asserting a positioning. It's demonstrating it. Nothing else on the site works this hard.</p></div>
+        <div class="cell"><h4 class="flare">It's low enough friction to survive</h4><p style="color:#B5B0A0">Two sentences. No headline, no hero image, no editing pass. He can add one from his phone. A blog post is a project; a noticing is a thought.</p></div>
+        <div class="cell"><h4 class="flare">It solves the LinkedIn tie-in</h4><p style="color:#B5B0A0">Publish to the site first, then post the same text to LinkedIn with a link back. The site becomes the archive and the canonical source; LinkedIn is distribution. It also means every LinkedIn post drives traffic to a page that sells him.</p></div>
+      </div>
+
+      <p class="small" style="margin-top:26px;color:#B5B0A0">Format on the page — mono index number, one or two sentences, date. Ledger rows again, but looser:</p>
+      <div class="ledger" style="margin-top:16px">
+        <div class="row"><span class="lbl flare">061</span><div><span class="t" style="font-weight:400;font-size:19px">Every brand that says it's "passionate about" something is telling you it couldn't find a real differentiator.</span></div><p class="small">— example only</p><span class="lbl">Jul 26</span></div>
+        <div class="row"><span class="lbl flare">060</span><div><span class="t" style="font-weight:400;font-size:19px">The best line in a hundred pages of 3M research was a stat nobody had bothered to write down as a sentence.</span></div><p class="small">— example only</p><span class="lbl">Jul 26</span></div>
+        <div class="row"><span class="lbl flare">059</span><div><span class="t" style="font-weight:400;font-size:19px">My daughter described a song as "loud on purpose." Best creative brief I've read this year.</span></div><p class="small">— example only</p><span class="lbl">Jun 26</span></div>
+      </div>
+      <p class="small" style="margin-top:14px;color:#B5B0A0">Jeff writes the real ones. Target: 25 at launch, so it looks alive on day one. That's a single afternoon.</p>
+
+      <h3 style="margin-top:48px;color:var(--paper)">Patron &amp; Saint</h3>
+      <p style="margin-top:12px;color:#D8D3C4">From his note: <em>"never heard of it, have you? That's because it doesn't exist. But it probably should have."</em> A brand he invented that has no company attached to it. <strong style="color:var(--paper)">This is the best idea in the entire brief and it should be a full page, not a footnote.</strong></p>
+      <p style="margin-top:1em;color:#D8D3C4">Give it the complete treatment — logo, positioning line, a few executions, and the joke played entirely straight. A speculative brand, built properly, is a portfolio piece that doubles as an argument: <em>this is what I do when nobody is paying me and nobody is saying no.</em> It shows range, taste and point of view in a way no approved client work can, because there's no client fingerprint on it. And per his note — sell the shirt. A physical object makes the joke real and it's the kind of thing people mention to other people.</p>
+
+      <div class="box" style="border-color:#3A382C">
+        <span class="lbl">What else lives here</span>
+        <ul class="tight" style="margin-top:8px">
+          <li style="color:#D8D3C4"><strong style="color:var(--paper)">The three existing posts</strong> — keep the 2020 virtual-teams piece if he still stands behind it, archive the 2015 ones. No visible dates on the index, so the archive doesn't advertise its own age.</li>
+          <li style="color:#D8D3C4"><strong style="color:var(--paper)">Longer pieces</strong> — a slot for real essays, published when he has one and never on a schedule. Two good ones beat twelve obligatory ones.</li>
+          <li style="color:#D8D3C4"><strong style="color:var(--paper)">Poetry, if he's willing.</strong> He was a poetry instructor and teaches at The Loft. The current site mentions it once and moves on quickly. On a site about noticing, it's the most credible evidence he's got — and it's the thing no other brand strategist can put on the page.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+</div>
+
+<!-- ============ 08 FROM JEFF ============ -->
+<div class="wrap">
+<section id="jeff">
+  <div class="grid">
+    <div class="gutter"><span class="lbl">08 / Open questions</span></div>
+    <div>
+      <h2>What we need<br>from Jeff.</h2>
+      <div class="box box-flare">
+        <span class="lbl">Read this one first</span>
+        <p style="margin-top:10px">Every new project in his list — NBC Sports, Rotten Tomatoes/Fandango, UHC, Riverlights, LiftOne, Velera, Vetter, Dentsply, Invisalign — has <strong>no public credit to him anywhere</strong>. That's completely normal for freelance and agency-side work, and the projects themselves are real and verified. But it means <em>we cannot write a word of these case studies without him.</em> He is the only source. Recommendation: send him the five-field template from §04 and have him fill it per project. It's ten minutes each, and it's the single thing blocking the build.</p>
+      </div>
+
+      <h3 style="margin-top:40px">Must resolve before build</h3>
+      <div style="border-top:1px solid var(--rule);margin-top:16px">
+        <div class="q"><span class="n">01</span><div><b>Founded 2013 — settled, now make it consistent.</b><p>Three dates are in circulation: his About page says <span class="strike">2012</span>, his U of M faculty bio says <span class="strike">2010</span>, his notes say 2013. <strong class="flare">We're going with 2013.</strong> That means correcting the live About page and asking U of M to update his CCAPS faculty bio — an outdated third-party bio is the kind of thing a prospect finds and quietly wonders about.</p></div></div>
+        <div class="q"><span class="n">02</span><div><b>Which Vetter?</b><p>Several candidates. Most likely VETTER Forks (forklift attachments, US ops in Pennsylvania) given the LiftOne adjacency — but it could be Vetter Pharma or VetterTec. Need the right one.</p></div></div>
+        <div class="q"><span class="n">03</span><div><b>Role, year and agency for each new project.</b><p>Per project: what he actually did, for whom, when, and with which agency. Plus whether he can name the client publicly and whether he has assets or the case study has to be text-only.</p></div></div>
+        <div class="q"><span class="n">04</span><div><b>Is the UHC work UnitedHealthcare or Optum?</b><p>His site already documents an Optum campaign — same parent company. If it's actually Optum, we lead with the one that's verifiable. If it's genuinely UHC, that's a separate and significant credit.</p></div></div>
+        <div class="q"><span class="n">05</span><div><b>Can we quantify "returning clients"?</b><p>"Most of my clients hire me more than once" is good. "Nine of my last twelve engagements were repeat clients" is a different order of proof. Worth him counting.</p></div></div>
+        <div class="q"><span class="n">06</span><div><b>Where does the email actually go?</b><p>He asked this himself. Also: can we shorten jeff.neidt@neidtwriter.com to jeff@?</p></div></div>
+        <div class="q"><span class="n">07</span><div><b>Is Caper Method still active?</b><p>Recommendation is to retire it as a section. If it's live and he wants it visible, it needs a real reason to exist on the page.</p></div></div>
+        <div class="q"><span class="n">08</span><div><b>Photography and assets.</b><p>New portrait (per his note), plus stills for every case study. This is the longest-lead item on the whole project and the most common reason redesigns stall. Start it now, not after design approval.</p></div></div>
+        <div class="q"><span class="n">09</span><div><b>How far can we go on Patron &amp; Saint?</b><p>Does the invented brand have an identity already, or are we designing it? And is the shirt real or a bit? Both are fine — they're just different amounts of work.</p></div></div>
+        <div class="q" style="border-bottom:0"><span class="n">10</span><div><b>Poetry on the site — yes or no?</b><p>Strong recommendation for yes, even one piece. It's the most differentiating credential he has and the site currently apologizes for it.</p></div></div>
+      </div>
+
+      <h3 style="margin-top:44px">Things to be careful about</h3>
+      <ul class="tight">
+        <li><strong>Attribute other people's numbers.</strong> ChappellRoberts claims Riverlights beat sales goals by 160% — that's their figure on their case study. Write "ChappellRoberts reports…" not "we drove…".</li>
+        <li><strong>Don't say "award-winning."</strong> Nothing surfaced in a search of the usual shows. If he has awards, great, name them. If not, the 3M credit does more work anyway.</li>
+        <li><strong>Check the client roster before republishing it.</strong> It's roughly 130 brands and 55 agencies, some going back a decade. A few may have been acquired, renamed or folded. Worth one pass.</li>
+        <li><strong>The 3M campaign is externally verifiable</strong> — Forbes covered the March 2015 launch. That's a link worth having, and it's the strongest third-party proof on the site.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+</div>
+
+<hr class="rule-thick">
+
+<!-- ============ 09 BUILD ============ -->
+<div class="wrap">
+<section id="build">
+  <div class="grid">
+    <div class="gutter"><span class="lbl">09 / Build</span></div>
+    <div>
+      <h2>How it gets made.</h2>
+      <p style="margin-top:20px">Custom static site — hand-written HTML/CSS/JS, no framework, no build step required. Hosted on Netlify or Vercel, deployed from a Git repo. Fast, permanent, free at this scale, and it will look exactly like the design rather than approximately like it.</p>
+
+      <div class="cols c2">
+        <div class="cell"><h4>Why not Cargo</h4><p>Jeff linked two Cargo templates for the <em>look</em>, and we've taken that reference. But the ledger rows, the sticky mono gutter and the invert system all fight Cargo's editor. Custom gets the design intact for the same effort.</p></div>
+        <div class="cell"><h4>The editing tradeoff</h4><p>Static means Jeff can't edit it himself without touching code. Mitigation: markdown files for case studies and the noticed list, compiled at deploy. He edits a text file, pushes, site updates. If he'd rather not, adding Sanity or Decap CMS later is a contained job — worth deciding before we build, not after.</p></div>
+        <div class="cell"><h4>Performance target</h4><p>Two Google fonts, no framework, no analytics bloat. Sub-1s first paint, 100 Lighthouse on everything but images. A writer's site that loads slowly is an own goal.</p></div>
+        <div class="cell"><h4>Don't skip</h4><p>Redirects from every old URL (/clients, /insights, /work/*) so a decade of links and search equity survives. Semantic HTML, real focus states, alt text, reduced-motion. Sitemap and OG images per page — his work gets shared on LinkedIn.</p></div>
+      </div>
+
+      <h3 style="margin-top:44px">Sequence</h3>
+      <div class="ledger" style="margin-top:18px">
+        <div class="row"><span class="lbl flare">01</span><div><span class="t">Approve direction</span></div><p class="small">This doc, with Jeff. Lock the headline territory and the visual lane.</p><span class="lbl">Now</span></div>
+        <div class="row"><span class="lbl flare">02</span><div><span class="t">Build the homepage, live</span></div><p class="small">Real HTML, real type, real motion. Far more useful than another round of static comps.</p><span class="lbl">Next</span></div>
+        <div class="row"><span class="lbl flare">03</span><div><span class="t">Jeff fills the templates</span></div><p class="small">Five fields × ~12 projects. Runs in parallel with 02 — it's the critical path.</p><span class="lbl">Parallel</span></div>
+        <div class="row"><span class="lbl flare">04</span><div><span class="t">Work index + case studies</span></div><p class="small">Template once, populate many. Photography needs to have started by here.</p><span class="lbl">Then</span></div>
+        <div class="row"><span class="lbl flare">05</span><div><span class="t">About, Contact, Non-Billable</span></div><p class="small">Plus 25 seeded noticings so the section launches alive.</p><span class="lbl">Then</span></div>
+        <div class="row"><span class="lbl flare">06</span><div><span class="t">Redirects, QA, launch</span></div><p class="small">Old URL map, cross-browser, mobile, accessibility pass, then ship.</p><span class="lbl">Last</span></div>
+      </div>
+
+      <div class="box box-solid">
+        <span class="lbl">Say when</span>
+        <h3 style="color:var(--paper);margin:10px 0 12px">I'll build the homepage next.</h3>
+        <p style="color:#D8D3C4;font-size:17px">Working HTML — headline territory A, the ledger, the marquee, the invert band, real motion. Openable in a browser and sendable to Jeff. Tell me if you'd rather see two headline territories built side by side instead, or if anything above needs to change first.</p>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="coverbar">
+      <span class="lbl">Neidt Writer — Redesign Direction v1</span>
+      <span class="lbl">30 July 2026</span>
+      <span class="lbl lbl-flare" style="margin-left:auto">Value is the art of noticing.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var els = document.querySelectorAll('section > .grid, .box, .cols, .ledger, .wirestack, .swatches');
+  els.forEach(function(el){ el.style.opacity = '0'; el.style.transform = 'translateY(14px)'; el.style.transition = 'opacity .5s ease, transform .5s ease'; });
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ e.target.style.opacity='1'; e.target.style.transform='none'; io.unobserve(e.target); }
+    });
+  },{rootMargin:'0px 0px -8% 0px'});
+  els.forEach(function(el){ io.observe(el); });
+})();
+</script>
+</body>
+</html>

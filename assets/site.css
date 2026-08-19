@@ -1,0 +1,581 @@
+/* ============================================================
+   Jeff Neidt — design system
+   Paper / Ink / Flare. Hairline rules. Ledger rows.
+   ============================================================ */
+
+/* ============================================================
+   THEME
+   Two token sets, light and dark. A surface is either "base"
+   (the current theme) or "contra" (its opposite).
+
+   .invert  = a contra band inside a base page
+   body.flip = a whole contra page
+
+   Because contra is defined as *the opposite of whatever theme
+   is active*, Non-Billable stays the room that breaks the
+   pattern in both modes — dark against a light site, light
+   against a dark one. That was the whole point of the page, so
+   it shouldn't evaporate the moment someone flips the switch.
+   ============================================================ */
+
+:root{
+  --display:"Bricolage Grotesque",system-ui,sans-serif;
+  --body:"Newsreader",Georgia,serif;
+  --mono:"JetBrains Mono",ui-monospace,monospace;
+  --pad:clamp(20px,5vw,72px);
+  --maxw:1440px;
+  --nav-h:62px;
+}
+
+/* --- light tokens (default) --- */
+html,
+html[data-theme="dark"] .invert,
+html[data-theme="dark"] body.flip,
+html[data-theme="dark"] nav.contra{
+  --paper:#F2EEE4; --paper-2:#E7E1D2;
+  --ink:#16150F; --ink-70:#5A574A; --ink-40:#9A9585;
+  --ink-line:#C9C2AE;
+  --flare:#3D7C80; --flare-soft:#E1EEEE;
+  /* Teal (Jeff's pick, July 2026 — replaced the original vermilion).
+     #3D7C80 is 4.13:1 on paper — clears the 3:1 display bar with
+     room, but the two-token system stays: --flare-ink is the same
+     hue darkened to 5.07:1 for labels, links and hover backgrounds,
+     so small text keeps extra headroom. Display headlines keep the
+     brighter one. */
+  --flare-ink:#356D71;
+  --track:#D5CFBD; --track-hover:#CBC4B0;
+  --nav-bg:rgba(242,238,228,.86);
+}
+
+/* --- dark tokens --- */
+html[data-theme="dark"],
+html:not([data-theme="dark"]) .invert,
+html:not([data-theme="dark"]) body.flip,
+html:not([data-theme="dark"]) nav.contra{
+  --paper:#16150F; --paper-2:#201E16;
+  --ink:#F2EEE4; --ink-70:#B5B0A0; --ink-40:#7A7466;
+  --ink-line:#3A382C;
+  /* On ink, the lightened teal clears 4.5:1 easily (6.77:1), so
+     display and text accents are the same colour here. */
+  --flare:#5FA9AE; --flare-soft:#0F2426; --flare-ink:#5FA9AE;
+  --track:#37342C; --track-hover:#433F35;
+  --nav-bg:rgba(22,21,15,.88);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:18px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 var(--pad)}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+::selection{background:var(--flare-ink);color:var(--paper)}
+:focus-visible{outline:2px solid var(--flare);outline-offset:3px}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:var(--pad);top:8px;z-index:99;background:var(--ink);color:var(--paper);padding:10px 16px}
+
+/* ---------- type primitives ---------- */
+.lbl{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-70);font-weight:500}
+.lbl-flare{color:var(--flare-ink)}
+.flare{color:var(--flare)}
+/* The small-text half of the accent pair. Display sizes can take --flare
+   at 4.13:1; anything at body size has to use --flare-ink at 5.07:1, so
+   inline highlights inside running copy (the FAQ's [role] and
+   [specific hyper-niche industry], Aug 2026) use this, never .flare. */
+.flare-ink{color:var(--flare-ink)}
+h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.02;letter-spacing:-.035em}
+.h-xl{font-size:clamp(42px,9.2vw,148px);font-weight:700;letter-spacing:-.05em}
+.h-lg{font-size:clamp(34px,6.4vw,96px);font-weight:700;letter-spacing:-.048em}
+.h-md{font-size:clamp(26px,4.2vw,58px);letter-spacing:-.04em}
+.h-sm{font-size:clamp(20px,2.4vw,31px);letter-spacing:-.025em}
+p{max-width:70ch}
+p+p{margin-top:1em}
+.lead{font-size:clamp(19px,2.1vw,25px);line-height:1.42;max-width:40ch;font-weight:300}
+.small{font-size:16px;color:var(--ink-70);line-height:1.5}
+.tk{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;border:1px solid currentColor;padding:1px 5px;vertical-align:middle;margin-left:8px;opacity:.6;text-transform:uppercase;white-space:nowrap}
+
+/* ---------- NAV ---------- */
+nav{position:fixed;top:0;left:0;right:0;z-index:60;background:var(--nav-bg);backdrop-filter:blur(10px);border-bottom:1px solid var(--ink);height:var(--nav-h);color:var(--ink)}
+nav,nav *{transition:background-color .35s ease,color .35s ease,border-color .35s ease}
+.navin{max-width:var(--maxw);margin:0 auto;padding:0 var(--pad);height:100%;display:flex;align-items:center;gap:20px}
+.mark{font-family:var(--display);font-weight:700;font-size:19px;letter-spacing:-.03em;display:flex;align-items:center;gap:9px}
+.dot{width:9px;height:9px;background:var(--flare);border-radius:50%;flex:none;transition:transform .3s ease}
+.mark:hover .dot{transform:scale(1.6)}
+.navlinks{margin-left:auto;display:flex;gap:clamp(14px,2.6vw,34px);align-items:center;font-family:var(--display);font-weight:500;font-size:16px}
+/* nowrap or "Non-Billable" breaks at its hyphen on a phone and the
+   bar goes to two lines. Measured at 375px: the four links and the
+   toggle still fit on one row with room to spare. */
+.navlinks a{position:relative;padding:4px 0;white-space:nowrap}
+.navlinks a:after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--flare);transform:scaleX(0);transform-origin:left;transition:transform .24s cubic-bezier(.2,.7,.3,1)}
+.navlinks a:hover:after,.navlinks a[aria-current]:after{transform:scaleX(1)}
+.navlinks a[aria-current]{color:var(--flare-ink)}
+@media(max-width:620px){
+  .navin{gap:12px}
+  .navlinks{font-size:13.5px;gap:11px}
+  .mark .n{display:none}
+  /* the full-size switch pushes the nav past the viewport at 390px */
+  .themetoggle{width:44px;height:24px;margin-left:6px}
+  .themetoggle .knob{width:18px;height:18px}
+  html[data-theme="dark"] .themetoggle .knob{transform:translateX(20px)}
+  .themetoggle .ic{width:10px;height:10px;margin-top:-5px}
+  .themetoggle .sun{left:7px}
+  .themetoggle .moon{left:27px}
+}
+@media(max-width:400px){
+  .navlinks{font-size:12.5px;gap:9px}
+}
+/* iPhone SE and similar: four nav items plus a switch genuinely
+   doesn't fit, so tighten the page gutter and the control together */
+@media(max-width:360px){
+  :root{--pad:14px}
+  .navin{gap:8px}
+  .navlinks{font-size:11.5px;gap:7px}
+  .themetoggle{width:38px;height:21px;margin-left:4px}
+  .themetoggle .knob{width:15px;height:15px;top:3px;left:3px}
+  html[data-theme="dark"] .themetoggle .knob{transform:translateX(17px)}
+  .themetoggle .ic{width:9px;height:9px;margin-top:-4.5px}
+  .themetoggle .sun{left:6px}
+  .themetoggle .moon{left:23px}
+}
+
+/* ---------- theme toggle ----------
+   Standard sleek switch: grey pill track, teal knob sliding
+   between a fixed sun and moon. The one deliberate borrowing from
+   the rest of the site is the knob colour — it's the same circle as
+   the mark in the logo, so the control still belongs here even
+   though the pill shape is the only rounded thing on the page.
+   Whichever icon the knob covers lights up; the other stays muted
+   and reads as the destination. */
+.themetoggle{
+  position:relative;display:inline-block;flex:none;margin-left:10px;
+  width:54px;height:28px;padding:0;border:0;cursor:pointer;
+  background:var(--track);border-radius:999px;
+  transition:background-color .35s ease;
+  -webkit-tap-highlight-color:transparent;
+}
+.themetoggle .knob{
+  position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;
+  background:var(--flare);z-index:2;
+  transition:transform .4s cubic-bezier(.34,1.4,.5,1),background-color .3s ease;
+}
+html[data-theme="dark"] .themetoggle .knob{transform:translateX(26px)}
+.themetoggle .ic{
+  position:absolute;top:50%;width:12px;height:12px;margin-top:-6px;z-index:3;
+  color:var(--ink-40);transition:color .34s ease;pointer-events:none;
+}
+.themetoggle .sun{left:8px}
+.themetoggle .moon{left:34px}
+/* the icon the knob is sitting on is the active mode */
+html:not([data-theme="dark"]) .themetoggle .sun{color:var(--paper)}
+html[data-theme="dark"] .themetoggle .moon{color:var(--paper)}
+.themetoggle:hover{background:var(--track-hover)}
+/* press feedback via scale, not width — widening the knob would push
+   it past the track edge once it's translated to the dark position */
+.themetoggle:active .knob{scale:.92}
+
+/* ---------- scroll progress ----------
+   A hairline that fills as you read. Same 1px language as every
+   other rule on the site, so it reads as part of the grid. */
+.progress{position:fixed;top:0;left:0;height:2px;width:100%;transform:scaleX(0);transform-origin:left;background:var(--flare);z-index:70;will-change:transform}
+
+/* ---------- layout ---------- */
+section{padding:clamp(52px,7.5vw,112px) 0}
+.pagehead{padding:calc(var(--nav-h) + clamp(44px,8vh,104px)) 0 clamp(30px,5vw,56px)}
+/* Homepage hero, Aug 2026. Jeff's V2 note: the hero "feels like missing a
+   bit visually" — so the headline shares the row with the Neidt Writer
+   mark instead of sitting alone against dead space. Asymmetric on purpose:
+   the H1 still has to be the loudest thing on the page, so the mark gets
+   the narrower track and never competes for size. Stacks below 900px,
+   where a side-by-side would squeeze both. */
+.herogrid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:clamp(28px,5vw,72px);align-items:center}
+/* .heromark — Jeff's 2015 mark, right of the H1.
+   Painted as a mask rather than placed with <img>, because an external
+   SVG in an <img> is its own document and can't see our currentColor.
+   Masking makes the teal a background, so one file serves both themes:
+   --flare is #3D7C80 on paper and #5FA9AE in the dark. */
+.heromark{width:100%;max-width:clamp(150px,20vw,290px);aspect-ratio:432/339.5;
+  background:var(--flare);
+  -webkit-mask:url(neidt-writer.svg) center/contain no-repeat;
+          mask:url(neidt-writer.svg) center/contain no-repeat}
+@media(max-width:900px){
+  .herogrid{grid-template-columns:1fr;gap:clamp(30px,6vw,48px)}
+}
+.rule{border:0;border-top:1px solid var(--ink)}
+.rule-3{border:0;border-top:3px solid var(--ink)}
+.draw{transform:scaleX(0);transform-origin:left;transition:transform .8s cubic-bezier(.16,1,.3,1)}
+.draw.in{transform:scaleX(1)}
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s cubic-bezier(.16,1,.3,1)}
+.reveal.in{opacity:1;transform:none}
+.shead{display:flex;flex-wrap:wrap;gap:10px 24px;align-items:baseline;margin-bottom:clamp(20px,3vw,34px)}
+.shead .more{margin-left:auto;font-family:var(--display);font-weight:600;font-size:16px;color:var(--flare-ink);display:inline-flex;align-items:center;gap:7px}
+.shead .more .ar{transition:transform .24s ease;display:inline-block}
+.shead .more:hover .ar{transform:translateX(5px)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,5vw,80px);align-items:start}
+.side{display:grid;grid-template-columns:190px 1fr;gap:clamp(20px,4vw,56px);align-items:start}
+.side>.gut{position:sticky;top:calc(var(--nav-h) + 22px)}
+@media(max-width:880px){.two,.side{grid-template-columns:1fr;gap:26px}.side>.gut{position:static}}
+
+/* ---------- boxes / cells ---------- */
+.box{border:1px solid var(--ink);padding:clamp(20px,3vw,34px)}
+.box-flare{border-color:var(--flare);background:var(--flare-soft)}
+.cells{display:grid;gap:1px;background:var(--ink);border:1px solid var(--ink)}
+.c2{grid-template-columns:repeat(2,1fr)}
+.c3{grid-template-columns:repeat(3,1fr)}
+.c4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:900px){.c3,.c4{grid-template-columns:1fr 1fr}}
+@media(max-width:580px){.c2,.c3,.c4{grid-template-columns:1fr}}
+.cell{background:var(--paper);padding:clamp(18px,2.4vw,28px)}
+.cell p{font-size:16.5px;line-height:1.5}
+.cell .lbl{display:block;margin-bottom:10px}
+
+/* ---------- LEDGER ROWS ---------- */
+.ledger{border-top:1px solid var(--ink)}
+.wrow{display:grid;grid-template-columns:52px minmax(0,1.15fr) minmax(0,1.25fr) 128px;gap:clamp(12px,2.4vw,34px);align-items:baseline;padding:clamp(16px,2vw,26px) 0;border-bottom:1px solid var(--ink);transition:background .2s ease,color .2s ease,padding .26s cubic-bezier(.16,1,.3,1);position:relative}
+.wrow:hover{background:var(--flare);color:var(--paper);padding-left:16px;padding-right:16px}
+.wrow:hover .lbl,.wrow:hover .noticed,.wrow:hover .cl{color:var(--paper)}
+.wt{font-family:var(--display);font-size:clamp(20px,2.5vw,34px);font-weight:600;letter-spacing:-.032em;line-height:1.04;display:block}
+.cl{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-70);display:block;margin-top:8px}
+.noticed{font-size:16.5px;line-height:1.45;color:var(--ink-70);max-width:44ch}
+.noticed em{font-style:italic}
+/* Homepage variant: rows carry only index + headline + tag line
+   (Jeff's call, July 2026 — the noticing lines live on Work and the
+   case pages). Two columns so the headline isn't squeezed into the
+   four-column ledger's second track. */
+.ledger-brief .wrow{grid-template-columns:52px 1fr}
+@media(max-width:820px){.ledger-brief .wrow{grid-template-columns:40px 1fr}}
+/* Work-index variant, Aug 2026: Jeff's copy doc simplifies project rows
+   to name + tag ("can just be a name with image… prefer that idea").
+   Three tracks — idx · title · category tag. The thinking moved off the
+   index; it lives on the case page, or in his inbox on request. */
+.ledger-simple .wrow{grid-template-columns:52px minmax(0,1fr) 128px}
+@media(max-width:820px){
+  .ledger-simple .wrow{grid-template-columns:40px 1fr}
+  .ledger-simple .wrow>*:nth-child(3){grid-column:2}
+}
+@media(max-width:820px){
+  .wrow{grid-template-columns:40px 1fr;row-gap:8px}
+  .wrow>*:nth-child(3),.wrow>*:nth-child(4){grid-column:2}
+  .noticed{max-width:none}
+}
+
+/* filters */
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:clamp(22px,3vw,32px)}
+.filters button{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;background:transparent;border:1px solid var(--ink);color:var(--ink);padding:8px 15px;cursor:pointer;transition:background .18s,color .18s}
+.filters button:hover{background:var(--paper-2)}
+.filters button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.wrow[hidden]{display:none}
+
+/* cursor thumb */
+#thumb{position:fixed;width:230px;height:158px;pointer-events:none;z-index:80;opacity:0;transform:translate(-50%,-50%) scale(.9);transition:opacity .22s ease,transform .3s cubic-bezier(.16,1,.3,1);border:1px solid var(--ink);display:grid;place-items:center;background:var(--paper-2);padding:12px;text-align:center}
+#thumb.on{opacity:1;transform:translate(-50%,-50%) scale(1)}
+/* .hasimg — the row supplied art, so the frame becomes the picture:
+   padding off, image covers. Rows still waiting on art keep the
+   labelled frame above, which is why both states live here. */
+#thumb.hasimg{padding:0}
+#thumb img{display:none;width:100%;height:100%;object-fit:cover}
+#thumb.hasimg img{display:block}
+#thumb.hasimg .lbl{display:none}
+@media(max-width:900px){#thumb{display:none}}
+
+/* ---------- MARQUEE ---------- */
+.marq{border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);padding:clamp(16px,2.2vw,24px) 0;overflow:hidden;white-space:nowrap;-webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
+.marqtrack{display:inline-flex;animation:slide 46s linear infinite;will-change:transform}
+.marq:hover .marqtrack{animation-play-state:paused}
+/* Names teal, dots ink — swapped round from the original (Jeff, Aug 2026)
+   to give the band its own colour and stop it reading as another slab of
+   headline. Stated as --ink rather than white so the dots stay legible
+   when the page is light; teal on the names is safe at this size, which
+   is display scale and clears the large-text bar. */
+.marqtrack span{font-family:var(--display);font-weight:600;font-size:clamp(22px,3.2vw,44px);letter-spacing:-.03em;padding:0 clamp(16px,2.4vw,34px);display:inline-flex;align-items:center;gap:clamp(16px,2.4vw,34px);color:var(--flare)}
+.marqtrack span:after{content:"";width:7px;height:7px;background:var(--ink);border-radius:50%;display:inline-block;flex:none}
+@keyframes slide{to{transform:translateX(-50%)}}
+
+/* ---------- CONTRA SURFACES ----------
+   Tokens are already flipped by the theme block above, so these
+   two rules are the entire implementation. Everything inside
+   inherits correctly with no per-component overrides. */
+.invert,body.flip{background:var(--paper);color:var(--ink)}
+.invert .lbl,body.flip .lbl{color:var(--flare-ink)}
+
+/* 1px grid gaps want the muted line on a contra surface, not
+   full-strength type colour — that reads as a glare. */
+.invert .cells,body.flip .cells{background:var(--ink-line);border-color:var(--ink-line)}
+.invert .rule,.invert .rule-3,body.flip .rule,body.flip .rule-3{border-color:var(--ink-line)}
+.invert .ledger,.invert .wrow,body.flip .ledger,body.flip .wrow{border-color:var(--ink-line)}
+.invert .box,body.flip .box{border-color:var(--ink-line)}
+body.flip footer{border-top-color:var(--ink-line)}
+.invert .imgslot,body.flip .imgslot{border-color:var(--ink-line);background:repeating-linear-gradient(135deg,transparent,transparent 9px,rgb(from var(--ink) r g b / .07) 9px,rgb(from var(--ink) r g b / .07) 10px)}
+@supports not (color:rgb(from #000 r g b)){
+  .invert .imgslot,body.flip .imgslot{background:repeating-linear-gradient(135deg,transparent,transparent 9px,rgba(128,128,128,.14) 9px,rgba(128,128,128,.14) 10px)}
+}
+
+/* ---------- Patron & Saint — scoped brand override ----------
+   P&S has its own identity and its own green. Rebinding --flare
+   inside this section lets every accent switch over with no
+   extra classes: it reads as a different brand, because it is. */
+.ps{--flare:#8EC63F}
+.ps .logoplate{background:#fff;border:1px solid var(--ink-line);padding:clamp(26px,5vw,64px);display:grid;place-items:center}
+.ps .logoplate img{width:100%;max-width:460px;height:auto}
+.ps .swatchrow{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.ps .sw{display:flex;align-items:center;gap:9px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#B5B0A0}
+.ps .sw i{width:15px;height:15px;display:block;border:1px solid var(--ink-line)}
+
+/* ---------- noticed list ---------- */
+.noticelist{border-top:1px solid var(--ink-line)}
+.nrow{display:grid;grid-template-columns:64px 1fr 90px;gap:clamp(12px,2.4vw,28px);align-items:baseline;padding:20px 0;border-bottom:1px solid var(--ink-line);transition:background .2s,color .2s,padding .26s cubic-bezier(.16,1,.3,1)}
+.nrow:hover{background:var(--flare);color:var(--ink);padding-left:16px;padding-right:16px}
+.nrow:hover .lbl{color:var(--ink)}
+.nrow p{font-size:clamp(17px,1.7vw,21px);line-height:1.4;max-width:56ch}
+@media(max-width:700px){.nrow{grid-template-columns:50px 1fr}.nrow>*:nth-child(3){grid-column:2}}
+
+/* ---------- roster ---------- */
+.roster{columns:4;column-gap:clamp(18px,3vw,40px);font-size:15.5px;line-height:1.75}
+.roster span{display:block;break-inside:avoid}
+@media(max-width:1000px){.roster{columns:3}}
+@media(max-width:700px){.roster{columns:2}}
+@media(max-width:430px){.roster{columns:1}}
+
+/* ---------- case study ---------- */
+.casefield{border-top:1px solid var(--ink);padding:clamp(26px,4vw,48px) 0}
+.casefield.spot{background:var(--flare-soft);border-top-color:var(--flare);padding-left:clamp(18px,3vw,32px);padding-right:clamp(18px,3vw,32px);border-left:3px solid var(--flare)}
+.noticing{font-family:var(--display);font-size:clamp(24px,3.8vw,50px);font-weight:600;letter-spacing:-.038em;line-height:1.08;max-width:22ch;margin-top:14px}
+.imgslot{border:1px solid var(--ink);background:repeating-linear-gradient(135deg,transparent,transparent 9px,rgba(22,21,15,.05) 9px,rgba(22,21,15,.05) 10px);aspect-ratio:16/9;display:grid;place-items:center;margin-top:10px}
+
+/* Video embeds share the imgslot's hairline frame. Aspect ratio
+   is set inline per embed because it belongs to the film, not
+   the layout — Dentsply's convention cut is 426:64, and forcing
+   16:9 would letterbox it into a strip of nothing. The black bed
+   is the player's own colour, not a theme surface, so it stays
+   hardcoded in both modes. */
+.videoslot{border:1px solid var(--ink);margin-top:10px;background:#000}
+.videoslot iframe{display:block;width:100%;height:100%;border:0}
+
+/* ---------- case media (real imagery, Aug 2026) ----------
+   Replaces .imgslot on the pages where Jeff's Drive files
+   landed. .imgslot stays — it still marks the frames he
+   hasn't sent.
+
+   .heromedia — the key visual directly under the header, in
+   the same hairline frame as .videoslot so a film and a still
+   lead identically. Deliberately no fixed aspect-ratio: these
+   come from client decks, site screengrabs and phone photos
+   at wildly different shapes, and forcing a common rectangle
+   would crop copy out of the campaign work. The image sets
+   the height; the frame follows it.
+
+   .stills — supporting frames. Borrows .cells' 1px-gap-over-
+   an-ink-bed trick so gutters read as hairlines, not gaps.
+   Here the images DO get a common ratio: in a grid, ragged
+   heights read as a mistake rather than a decision. .tall
+   flips it to portrait for phone photography. */
+.heromedia{border:1px solid var(--ink);margin-top:10px;background:var(--track)}
+.heromedia img{width:100%;height:auto}
+.stills{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1px;background:var(--ink);border:1px solid var(--ink);margin-top:26px}
+/* align-self:start is load-bearing. As direct grid items these
+   images inherit align-items:stretch, which beats aspect-ratio —
+   the frame grows to the row height and cover crops a sliver out
+   of the middle. Pinning the item to the row start hands control
+   back to the ratio below. */
+.stills img{width:100%;height:auto;align-self:start;aspect-ratio:4/3;object-fit:cover;background:var(--paper)}
+.stills.tall img{aspect-ratio:3/4}
+/* Print ads and posters carry their own copy, so they get the
+   .heromedia treatment — natural shape, no crop. Same reasoning
+   as the hero: a common rectangle would cut the headline off. */
+.stills.asis img{aspect-ratio:auto;object-fit:contain}
+/* ---------- .shots — the work slideshow (Aug 2026) ----------
+   Replaced the stills grid on every case page. A grid of six
+   thumbnails reads as an archive; one image at a time reads as a
+   portfolio.
+
+   No frame, and that is the whole trick. An earlier pass gave this a
+   bordered box of fixed height and contained the image inside it,
+   which meant letterboxing — Jeff's files run from 2:3 posters to
+   16:9 stills. Take the box away and the fitting problem goes with
+   it: each image is simply its own width and its own height, and
+   unequal heights have no edge to look ragged against.
+
+   Controls sit BELOW the picture in normal flow, not over it (MC,
+   Aug 2026). Two things fall out of that. The glyphs no longer have
+   to survive landing on a photograph, so they lose their translucent
+   ground and read as page furniture — arrows and count on one centre
+   line, the way a plate caption would sit. And the track no longer
+   has to hug the current slide: nothing is anchored to the image's
+   edges, so measuring each slide and animating the height — the old
+   "fit" step — buys nothing. Dropping it also steadies the controls,
+   which used to walk up and down the page as you paged through.
+
+   Width is capped rather than full-bleed. These are 1600px files; at
+   full column width the smaller ones were being asked to cover more
+   ground than they had pixels for, which is what made them soft. */
+.shots{margin-top:26px;max-width:560px}
+.shots-track{display:grid;grid-auto-flow:column;grid-auto-columns:100%;
+  overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;
+  -webkit-overflow-scrolling:touch;scrollbar-width:none;scroll-behavior:smooth;
+  align-items:start}
+.shots-track::-webkit-scrollbar{display:none}
+.shots-track img{width:100%;height:auto;scroll-snap-align:center}
+.shots-track:focus-visible{outline:2px solid var(--flare-ink);outline-offset:3px}
+
+/* ---------- playable lead ----------
+   A still that stands in for a film (Jeff, Aug 2026 — he wanted the lead
+   image clickable rather than a bare CTA underneath). The whole frame is
+   the link, and the cue sits on it so the affordance is visible without
+   hover, which is the only version that works on a phone. */
+.playlink{display:block;position:relative;text-decoration:none;color:inherit}
+.playlink img{display:block;width:100%;height:auto}
+.playcue{position:absolute;left:0;bottom:0;display:inline-flex;align-items:center;gap:12px;
+  background:var(--paper);color:var(--ink);border-top:1px solid var(--ink);border-right:1px solid var(--ink);
+  font-family:var(--mono);font-size:13px;letter-spacing:.12em;text-transform:uppercase;
+  padding:13px 20px;transition:background .18s ease,color .18s ease}
+.playcue .tri{width:0;height:0;border-style:solid;border-width:6px 0 6px 10px;
+  border-color:transparent transparent transparent currentColor;flex:none}
+.playlink:hover .playcue,.playlink:focus-visible .playcue{background:var(--flare-ink);color:var(--paper)}
+.playlink:focus-visible{outline:2px solid var(--flare-ink);outline-offset:3px}
+
+/* A single image at full column width, for the odd case that carries
+   copy the reader is meant to actually read (the UHC social board,
+   Aug 2026). The carousel's 560px cap is right for photography and
+   wrong for anything with type in it. */
+.shot-wide{margin:26px 0 0;border:1px solid var(--ink);background:var(--paper)}
+.shot-wide img{display:block;width:100%;height:auto}
+
+.shots-bar{display:flex;align-items:center;justify-content:center;gap:18px;margin-top:12px}
+.shots-nav{width:32px;height:32px;display:grid;place-items:center;border:0;
+  background:none;color:var(--ink);font-family:var(--mono);font-size:17px;
+  line-height:1;cursor:pointer;transition:color .18s ease}
+.shots-nav:hover:not(:disabled){color:var(--flare-ink)}
+.shots-nav:disabled{opacity:.28;pointer-events:none}
+.shots-count{color:var(--ink-40);letter-spacing:.14em}
+@media(prefers-reduced-motion:reduce){
+  .shots-track{scroll-behavior:auto}
+}
+
+/* On a phone the auto-fit grid collapses to one column, which turns
+   six stills into six screens of scrolling before the reader reaches
+   the next field. Below 640px the row becomes a horizontal snap
+   scroller instead: the frames keep their size, the case study keeps
+   its rhythm, and the overflowing edge of the next image is the
+   affordance telling you there's more. Cards sit at 78% so that
+   second frame is always visibly cut off — a full-width card reads
+   as a stack again. */
+@media(max-width:640px){
+  .stills{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:78%;
+    overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;
+    -webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .stills::-webkit-scrollbar{display:none}
+  .stills img{scroll-snap-align:start}
+  /* Natural-ratio rows align on their top edge, so unequal heights
+     read as a deliberate ragged baseline rather than a broken grid. */
+  .stills.asis{align-items:start}
+}
+/* Logos and packshots arrive on their own white ground, so they
+   get contained rather than cropped — a cover-crop eats the mark. */
+.stills.contain img{object-fit:contain;background:#fff}
+.invert .heromedia,body.flip .heromedia{border-color:var(--ink-line)}
+.invert .stills,body.flip .stills{background:var(--ink-line);border-color:var(--ink-line)}
+figure{margin:0}
+figcaption{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-40);margin-top:10px}
+.credits{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px 28px}
+.credits div span{display:block}
+/* Jeff's V3 case-page meta is a two-up, client then partners. The default
+   auto-fit would give them equal tracks, which starves the partners cell —
+   it can carry three agency links where the client is one word. Weighted
+   1:2, stacking under 620px so the links never wrap to single characters. */
+.credits-2{grid-template-columns:minmax(140px,1fr) 2fr}
+@media(max-width:620px){.credits-2{grid-template-columns:1fr}}
+
+/* ---------- forms ---------- */
+.form{display:grid;gap:1px;background:var(--ink);border:1px solid var(--ink);margin-top:26px;max-width:640px}
+.field{background:var(--paper);padding:14px 18px}
+.field label{display:block;margin-bottom:6px}
+.field input,.field textarea,.field select{width:100%;border:0;background:transparent;font-family:var(--body);font-size:18px;color:var(--ink);resize:vertical}
+.field input:focus,.field textarea:focus{outline:0}
+.field:focus-within{background:var(--flare-soft)}
+.btn{background:var(--ink);color:var(--paper);border:0;font-family:var(--display);font-weight:600;font-size:18px;letter-spacing:-.01em;padding:16px 18px;cursor:pointer;text-align:left;transition:background .2s}
+.btn:hover{background:var(--flare-ink)}
+
+/* ---------- faq ---------- */
+.faq{border-top:1px solid var(--ink);margin-top:22px}
+.faq details{border-bottom:1px solid var(--ink)}
+.faq summary{list-style:none;cursor:pointer;padding:20px 0;font-family:var(--display);font-weight:600;font-size:clamp(18px,2vw,25px);letter-spacing:-.025em;display:flex;gap:18px;align-items:baseline;transition:color .2s}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary:hover{color:var(--flare-ink)}
+.faq summary:after{content:"+";margin-left:auto;font-family:var(--mono);font-size:20px;color:var(--flare-ink);transition:transform .26s ease}
+.faq details[open] summary:after{transform:rotate(45deg)}
+.faq .ans{padding:0 0 22px 0;max-width:62ch}
+.faq .ans p+p{margin-top:.8em}
+
+/* ---------- footer ---------- */
+footer{border-top:3px solid var(--ink);padding:34px 0 44px}
+.fin{display:flex;flex-wrap:wrap;gap:8px 28px;align-items:baseline}
+.fin .lbl:last-child{margin-left:auto}
+@media(max-width:760px){.fin .lbl:last-child{margin-left:0}}
+
+/* ---------- misc ---------- */
+.status{display:inline-flex;align-items:center;gap:9px;border:1px solid currentColor;padding:6px 13px}
+.pulse{width:7px;height:7px;border-radius:50%;background:var(--flare);animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.8)}}
+.statbig{font-family:var(--display);font-size:clamp(46px,7vw,96px);font-weight:700;letter-spacing:-.05em;line-height:.92;color:var(--flare)}
+.ln{display:block;overflow:hidden}
+.ln>span{display:block;transform:translateY(102%);transition:transform 1s cubic-bezier(.16,1,.3,1)}
+.ready .ln>span{transform:none}
+.ln:nth-child(2)>span{transition-delay:.09s}
+.ln:nth-child(3)>span{transition-delay:.18s}
+.fadein{opacity:0;transform:translateY(14px);transition:opacity .8s ease .45s,transform .8s ease .45s}
+.ready .fadein{opacity:1;transform:none}
+.backlink{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--flare-ink);display:inline-flex;gap:8px;align-items:center}
+.backlink:hover span{transform:translateX(-4px)}
+.backlink span{transition:transform .24s ease;display:inline-block}
+
+/* ============================================================
+   MOTION — four additions, all subtle by design
+   ============================================================ */
+
+/* 1. Staggered rows. The container reveals, then each row
+      follows a beat later. Costs nothing, and it's the single
+      biggest perceived-quality difference on a long ledger. */
+.ledger.in .wrow,.noticelist.in .nrow{animation:rowin .62s cubic-bezier(.16,1,.3,1) backwards}
+.ledger.in .wrow:nth-child(1),.noticelist.in .nrow:nth-child(1){animation-delay:.02s}
+.ledger.in .wrow:nth-child(2),.noticelist.in .nrow:nth-child(2){animation-delay:.07s}
+.ledger.in .wrow:nth-child(3),.noticelist.in .nrow:nth-child(3){animation-delay:.12s}
+.ledger.in .wrow:nth-child(4),.noticelist.in .nrow:nth-child(4){animation-delay:.17s}
+.ledger.in .wrow:nth-child(5),.noticelist.in .nrow:nth-child(5){animation-delay:.22s}
+.ledger.in .wrow:nth-child(6),.noticelist.in .nrow:nth-child(6){animation-delay:.27s}
+.ledger.in .wrow:nth-child(n+7),.noticelist.in .nrow:nth-child(n+7){animation-delay:.31s}
+@keyframes rowin{from{opacity:0;transform:translateY(11px)}to{opacity:1;transform:none}}
+
+/* 2. Variable-weight hover. Bricolage is a variable font, so a
+      work title can gain weight under the cursor instead of just
+      changing colour. Almost nobody notices it consciously —
+      which is the point. */
+.wt{font-variation-settings:"wght" 600;transition:font-variation-settings .34s cubic-bezier(.16,1,.3,1),letter-spacing .34s ease}
+.wrow:hover .wt{font-variation-settings:"wght" 760;letter-spacing:-.038em}
+
+/* 3. Annotation underline. Draws itself under a phrase when it
+      scrolls into view, like someone marking up a page. On a
+      site about noticing, the mark-up gesture is the argument. */
+.note{position:relative;white-space:nowrap}
+.note:after{
+  content:"";position:absolute;left:-.06em;right:-.06em;bottom:-.12em;height:.42em;
+  border-bottom:2px solid var(--flare);border-radius:0 0 46% 52%/0 0 88% 82%;
+  transform:scaleX(0);transform-origin:left;opacity:.9;
+  transition:transform .85s cubic-bezier(.16,1,.3,1) .25s;
+}
+.in .note:after,.ready .note:after{transform:scaleX(1)}
+
+/* 4. The mark's dot breathes, very slowly. It's the only thing
+      on the site that moves without being asked to. */
+.dot{animation:breathe 5.5s ease-in-out infinite}
+@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(.82)}}
+.mark:hover .dot{animation:none}
+
+@media(prefers-reduced-motion:reduce){
+  *,*:before,*:after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+  .ln>span,.fadein{transform:none;opacity:1}
+  .reveal{opacity:1;transform:none}
+  .draw{transform:scaleX(1)}
+  .marqtrack,.dot{animation:none}
+  .ledger.in .wrow,.noticelist.in .nrow{animation:none;opacity:1;transform:none}
+  .note:after{transform:scaleX(1);transition:none}
+  .wrow:hover .wt{font-variation-settings:"wght" 600;letter-spacing:-.032em}
+  .progress{display:none}
+}
+@media print{nav,#thumb{display:none}body{background:#fff}}
